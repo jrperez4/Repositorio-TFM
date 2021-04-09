@@ -1,0 +1,27 @@
+{% extends "tutorial/layout.html" %}
+{% block content %}
+<h1>Shared Files</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Remote Item ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if files %}
+      {% for file in files %}
+        <tr>
+          <td>{{ file.id }}</td>
+          <td>{{ file.remoteItem.id }}</td>
+          <td>{{ file.remoteItem.name }}</td>
+          <td>{{ file.remoteItem.size }}</td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}
+<!-- </CalendarSnippet> -->

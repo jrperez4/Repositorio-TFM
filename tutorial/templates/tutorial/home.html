@@ -1,0 +1,24 @@
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License. -->
+
+<!-- <HomeSnippet> -->
+{% extends "tutorial/layout.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Repositorio TFM</h1>
+  <p class="lead">Esta página web es un repositorio de TFM, donde el alumnado y el profesorado pueden acceder a los documentos</p>
+  {% if request.user.is_authenticated %}
+    <h4>Welcome {{ request.user }}!</h4>
+    <p>Use the navigation bar at the top of the page to get started.</p>
+    <a href="{% url 'upload' %}" class="dropdown-item">Subir Un Archivo</a>
+
+  {% else %}
+
+  <a href="{% url 'signin' %}" class="btn btn-primary btn-large">Click here to sign in</a>
+  <a href="{% url 'register' %}" class="btn btn-primary btn-large">Register</a>
+
+
+  {% endif %}
+</div>
+{% endblock %}
+<!-- </HomeSnippet> -->

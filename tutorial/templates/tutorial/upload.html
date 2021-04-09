@@ -1,0 +1,383 @@
+{% extends "tutorial/layout.html" %}
+{% block content %}
+
+<!--<div class="jumbotron">
+<style>
+		.login_btn {
+			background: #005c99 !important;
+			color: white !important;
+		}
+		.login_btn:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.login_container {
+			padding: 0 2rem;
+		}
+		.input-group-text {
+			background: black !important;
+			color: white !important;
+			border: 0 !important;
+			border-radius: 0.25rem 0 0 0.25rem !important;
+		}
+
+	</style>
+
+<form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+                        <div class="input-group mb-3">
+                            {{form.title.label_tag}}
+                            <span style="margin-left: 10px">{{form.title}} </span>
+
+						</div>
+						<div class="input-group mb-3">
+                            {{form.keyword.label_tag}}
+							 <span style="margin-left: 10px">{{form.keyword}} </span>
+						</div>
+						<div class="input-group mb-3">
+                            {{form.description.label_tag}}
+							 <span style="margin-left: 10px">{{form.description}} </span>
+						</div>
+						<div class="input-group mb-3">
+                            {{form.sourcecode.label_tag}}
+							<div class="input-group mb-2">
+							    {{form.sourcecode}}
+                             </div>
+						</div>
+						<div class="input-group mb-3">
+                            {{form.documentation.label_tag}}
+							<div class="input-group mb-2">
+							    {{form.documentation}}
+                             </div>
+						</div>
+
+                         <div class="input-group mb-3">
+                            {{form.memoir.label_tag}}
+                             <div class="input-group mb-2">
+							    {{form.memoir}}
+                             </div>
+						</div>
+
+				   		<div class="d-flex mt-3 login_container">
+				 			<input class="btn login_btn" type="submit" value="Guardar y enviar">
+				   		</div>
+					</form>
+	                    {% for message in messages %}
+
+						 <div class="alert {{ message.tags }} alert-dismissible mt-3" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+						{{ message }}
+
+							 {% if form.errors %}
+								  {% for field in form %}
+
+									   {% for error in field.errors %}
+											 {{ error|escape }}
+									   {% endfor %}
+
+								  {% endfor %}
+							{% endif %}
+					  </div>
+
+						{% endfor %}
+
+    </div>-->
+
+<style>
+
+  #custom-button {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+   #custom-button span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-button span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-button:hover {
+  background-color: #A67624;
+}
+
+#custom-button:hover span{
+   padding-right: 25px;
+}
+#custom-button:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-text {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}
+
+
+#custom-button2 {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+   #custom-button2 span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-button2 span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-button2:hover {
+  background-color: #A67624;
+}
+
+#custom-button2:hover span{
+   padding-right: 25px;
+}
+#custom-button2:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-text2 {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}
+
+
+#custom-button3 {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+#custom-button3 span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-button3 span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-button3:hover {
+ background-color: #A67624;
+}
+
+#custom-button3:hover span{
+   padding-right: 25px;
+}
+#custom-button3:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-text3 {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}
+
+
+
+</style>
+<div class="jumbotron">
+    <h2>Enviar Trabajo</h2>
+<form method="POST" enctype="multipart/form-data">
+     {% csrf_token %}
+    <div class="form-group mt-5">
+        <label class="control-label">{{ form.title.label_tag }}</label>
+       <input type="text" class="form-control" name="title" maxlength="50" required="" id="id_title">
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">{{ form.keyword.label_tag }}</label>
+        <input type="text" class="form-control" name="keyword" maxlength="50" required="" id="id_keyword">
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">{{ form.description.label_tag }}</label>
+       <input class="form-control" type="text" name="description" maxlength="50" required="" id="id_description">
+
+        <!--<textarea class="form-control" type="text" required="" maxlength="50" id="id_description" rows="3"></textarea>-->
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">{{ form.sourcecode.label_tag }}</label>
+
+        <div class="form-group">
+        <input type="file" name="sourcecode" required="" id="id_sourcecode" hidden="hidden" />
+            <button type="button " id="custom-button"><span>Seleccionar archivo</span></button>
+        <span id="custom-text">Ningún archivo seleccionado. (.zip, .rar, .7z)</span>
+        </div>
+
+
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">{{ form.documentation.label_tag }}</label>
+        <!--<div class="form-group">
+            {{form.documentation}}
+            <input type="file" name="documentation" required="" id="id_documentation">
+         </div>-->
+        <div class="form-group">
+        <input type="file" name="documentation" required="" id="id_documentation" hidden="hidden" />
+            <button type="button " id="custom-button2"><span>Seleccionar archivo</span></button>
+        <span id="custom-text2">Ningún archivo seleccionado. (.pdf)</span>
+        </div>
+
+    </div>
+
+     <div class="form-group">
+        <label class="control-label">{{ form.memoir.label_tag }}</label>
+         <!--<div class="form-group">
+             {{form.memoir}}
+         </div>-->
+
+
+         <div class="form-group">
+        <input type="file" name="memoir" required="" id="id_memoir" hidden="hidden" />
+            <button type="button " id="custom-button3"><span>Seleccionar archivo</span></button>
+        <span id="custom-text3">Ningún archivo seleccionado. (.pdf)</span>
+
+        </div>
+
+    </div>
+
+    {% for message in messages %}
+
+						 <div class="alert {{ message.tags }} alert-dismissible mt-3" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+						{{ message }}
+
+							 {% if form.errors %}
+								  {% for field in form %}
+
+									   {% for error in field.errors %}
+											 {{ error|escape }}
+									   {% endfor %}
+
+								  {% endfor %}
+							{% endif %}
+					  </div>
+
+						{% endfor %}
+
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary mt-5" style="padding: 15px">Guardar y enviar</button>
+    </div>
+
+</form>
+    <script>
+        const realFileBtn = document.getElementById("id_sourcecode");
+        const customBtn = document.getElementById("custom-button");
+        const customTxt = document.getElementById("custom-text");
+
+customBtn.addEventListener("click", function() {
+  realFileBtn.click();
+});
+
+realFileBtn.addEventListener("change", function() {
+  if (realFileBtn.value) {
+    customTxt.innerHTML = realFileBtn.value.match(
+      /[\/\\]([\w\d\s\.\-\(\)]+)$/
+    )[1];
+  } else {
+    customTxt.innerHTML = "Ningún archivo seleccionado.";
+  }
+});
+
+        const realFileBtn2 = document.getElementById("id_documentation");
+        const customBtn2 = document.getElementById("custom-button2");
+        const customTxt2 = document.getElementById("custom-text2");
+
+customBtn2.addEventListener("click", function() {
+  realFileBtn2.click();
+});
+
+realFileBtn2.addEventListener("change", function() {
+  if (realFileBtn2.value) {
+    customTxt2.innerHTML = realFileBtn2.value.match(
+      /[\/\\]([\w\d\s\.\-\(\)]+)$/
+    )[1];
+  } else {
+    customTxt2.innerHTML = "Ningún archivo seleccionado.";
+  }
+});
+
+        const realFileBtn3 = document.getElementById("id_memoir");
+        const customBtn3 = document.getElementById("custom-button3");
+        const customTxt3 = document.getElementById("custom-text3");
+
+customBtn3.addEventListener("click", function() {
+  realFileBtn3.click();
+});
+
+realFileBtn3.addEventListener("change", function() {
+  if (realFileBtn3.value) {
+    customTxt3.innerHTML = realFileBtn3.value.match(
+      /[\/\\]([\w\d\s\.\-\(\)]+)$/
+    )[1];
+  } else {
+    customTxt3.innerHTML = "Ningún archivo seleccionado.";
+  }
+});
+
+    </script>
+</div>
+{% endblock %}
