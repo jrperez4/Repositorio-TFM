@@ -2,6 +2,8 @@
 # Licensed under the MIT License.
 
 # <FirstCodeSnippet>
+import os
+
 from requests_oauthlib import OAuth2Session
 
 import xlrd
@@ -61,6 +63,21 @@ def get_user_files(token):
 
 # </GetFilesSnippet>
 
+def get_paths_to_upload(token,username):
+
+    graph_client = OAuth2Session(token=token)
+    root = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos:/children'.format(graph_url))
+
+    for folder in root.json()['value']:
+
+        if folder['name'].find(username) != -1:
+            print("CARPETA--->", folder['name'])
+            path_memoir = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Memoria/'.format(folder['name'])
+            path_documentation = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Documentacion/'.format(folder['name'])
+            path_sourcecode = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Codigo Fuente/'.format(folder['name'])
+
+    return path_memoir, path_sourcecode, path_documentation
+
 
 
 # <GetFilesSnippet>
@@ -77,6 +94,10 @@ def get_user_shared_files(token):
 
     shared = graph_client.get('{0}/drives/33A0E52B21AB1E6D/items/33A0E52B21AB1E6D!109/children'.format(graph_url))
 
+    root = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos:/children'.format(graph_url))
+
+    final = graph_client.get('{0}/drives/d29cf38fb7d76d82/items/D29CF38FB7D76D82!137/children'.format(graph_url))
+
     '''/ drives / {remoteItem - driveId} / items / {remoteItem - id}'''
 
     print("--------------------------------------------------")
@@ -85,7 +106,7 @@ def get_user_shared_files(token):
 
    #print("Remote item id: " + files.json()['value'][0]['remoteItem']['id'])
     #print(files.json())
-    print("----------------AQUI VA EL SHARED----------------------------------")
+    ''' print("----------------AQUI VA EL SHARED----------------------------------")
     print(shared.json()['value'])
     person = "1.0"
     id_user = get_folder_id_user(token, person)
@@ -96,78 +117,44 @@ def get_user_shared_files(token):
     print("El id de la carpeta de documentacion del usuario es: ", id_documentation)
     print("El id de la carpeta de memoria del usuario es: ", id_memoir)
 
+    print("-----------------AQUI VA EL ROOTS-------------------")
+    print(root.json())
+    print("Drive id de Documentos: " + root.json()['parentReference']['driveId'])
+    print("Remote item id Documentos: " + root.json()['parentReference']['id'])'''
 
-    '''
-    cadena = "Memoria"
+    print("----------------Muestrame que tienes-------------")
+    print(root.json())
+    cadena = "1.0"
 
-    for person in shared.json()['value']:
+    for folder in root.json()['value']:
 
-       if person['name'].find(cadena) != -1:
-           print(cadena+" forma parte de: ", person['name'].format(cadena))
-           print("y su código es: ", person['id'])
-       else:
-           print(cadena + " NO forma parte de: ", person['name'].format(cadena))
-           print("pero su código es: ", person['id'])
+            if folder['name'].find(cadena) != -1:
+                print("CARPETA--->", folder['name'])
 
-    
+                print("CARPETA DRIVE ID----->",folder['parentReference']['driveId'])
+                print("CARPETA remote item id----->", folder['parentReference']['id'])
+                drive_id = folder['parentReference']['driveId']
+                remote_item_id = folder['parentReference']['id']
+
+    camino_memoria, camino_documentacion, camino_codigo = get_paths_to_upload(token)
+    print("El camino para la memoria es: ", camino_memoria)
+    print("El camino para la documentacion es: ", camino_documentacion)
+    print("El camino para el codigo es: ", camino_codigo)
+
+    #final2 = graph_client.get('{0}/drives/{1}/items/{2}/children'.format(graph_url,drive_id,remote_item_id))
 
 
 
-    print("----------------AQUI VA EL SHARED----------------------------------")
-    print(shared.json()['value'][0])
-    print("QUEREMOS VER 1 CARPETA",shared.json()['value'][0]['name'])
-    print("Drive id: " + shared.json()['value'][0]['parentReference']['driveId'])
-    print("Remote item id: " + shared.json()['value'][0]['parentReference']['id'])
 
-     print("---------------------VA A LEER LOS ARCHIVOS-----------------------------")
-     leer_archivos()
-     print("---------------------ARCHIVOS LEIDOS-----------------------------")'''
+
+
+
+
 
     # Return the JSON result
     return files.json()
 # </GetFilesSnippet>
 
-def upload_file_to_onedrive(token):
-    graph_client = OAuth2Session(token=token)
-
-    files = graph_client.put('{0}/drives/33A0E52B21AB1E6D/items/33A0E52B21AB1E6D!110:/file:/content'.format(graph_url))
-
-    return files.json()
-# </GetFilesSnippet>
-
-def get_folder_id_user(token,person):
-
-    graph_client = OAuth2Session(token=token)
-    shared = graph_client.get('{0}/drives/33A0E52B21AB1E6D/items/33A0E52B21AB1E6D!108/children'.format(graph_url))
-    person_name = str(person)
-
-    for person in shared.json()['value']:
-
-       if person['name'].find(person_name) != -1:
-           id = person['id']
 
 
-    return id
-
-def get_children_folder_ids(token,id_person):
-
-    graph_client = OAuth2Session(token=token)
-    shared = graph_client.get('{0}/drives/33A0E52B21AB1E6D/items/{1}/children'.format(graph_url,id_person))
-    sourcecode = "Codigo Fuente"
-    documentation = "Doc.TFM"
-    memoir = "Memoria"
-
-
-    for folder in shared.json()['value']:
-
-        print("Carpeta: ", folder['name'], "con código ", folder['id'])
-        if folder['name'].find(sourcecode)!= -1:
-            id_sourcecode = folder['id']
-        if folder['name'].find(documentation)!= -1:
-            id_documentation = folder['id']
-        if folder['name'].find(memoir) != -1:
-            id_memoir = folder['id']
-
-
-    return id_sourcecode,id_documentation,id_memoir
 

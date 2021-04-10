@@ -8,7 +8,7 @@ from django.urls import reverse
 from tutorial.forms import CreateUserForm
 from tutorial.auth_helper import get_sign_in_url, get_token_from_code, store_token, store_user, remove_user_and_token, \
     get_token
-from tutorial.graph_helper import get_user, get_user_files, get_calendar_events, get_user_shared_files, get_folder_id_user, get_children_folder_ids
+from tutorial.graph_helper import get_user, get_user_files, get_calendar_events, get_user_shared_files, get_paths_to_upload
 import dateutil.parser
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -275,28 +275,29 @@ def upload_file(request):
       sourcecode_size = file_size(sourcecode)
       documentation_size = file_size(documentation)
       memoir_size = file_size(memoir)
-      folder_id = get_folder_id_user(token, request.user.username)
-      id_sourcecode, id_documentation, id_memoir = get_children_folder_ids(token, folder_id)
+
+      path_memoir, path_sourcecode, path_documentation = get_paths_to_upload(token, request.user.username)
+
 
       if sourcecode_size < 4000000:
-          upload_file_min_size(sourcecode, token, id_sourcecode)
+          upload_file_min_size(sourcecode, token, path_sourcecode)
       elif sourcecode_size >= 4000000:
-          upload_file_max_size(sourcecode, token, id_sourcecode)
+          upload_file_max_size(sourcecode, token, path_sourcecode)
       else:
           print("Error en el archivo source code")
 
       if documentation_size < 4000000:
-          upload_file_min_size(documentation, token, id_documentation)
+          upload_file_min_size(documentation, token, path_documentation)
       elif documentation_size >= 4000000:
-          upload_file_max_size(documentation, token, id_documentation)
+          upload_file_max_size(documentation, token, path_documentation)
       else:
           print("Error en el archivo documentation")
 
 
       if memoir_size < 4000000:
-          upload_file_min_size(memoir, token, id_memoir)
+          upload_file_min_size(memoir, token, path_memoir)
       elif memoir_size >= 4000000:
-          upload_file_max_size(memoir, token, id_memoir)
+          upload_file_max_size(memoir, token, path_memoir)
       else:
           print("Error en el archivo memoir")
 
@@ -340,10 +341,11 @@ def check_files(request,file, file2, file3):
     return valid_files
 
 
-def upload_file_min_size(file,token,folder_id):
+def upload_file_min_size(file,token,path):
 
     graph_client = OAuth2Session(token=token)
-    graph_client.put('{0}/drives/33A0E52B21AB1E6D/items/{1}:/{2}:/content'.format(graph_url, folder_id, file),
+
+    graph_client.put('{0}{1}{2}:/content'.format(graph_url, path, file),
                      headers={
                          'Authorization': 'Bearer ' + str(token),
                          'Content-type': 'application/binary'
@@ -351,10 +353,10 @@ def upload_file_min_size(file,token,folder_id):
                      data=open('tutorial/static/fileupload/' + file.name, 'rb').read())
 
 
-def upload_file_max_size(file,token,folder_id):
+def upload_file_max_size(file,token,path):
 
     graph_client = OAuth2Session(token=token)
-    result = graph_client.post('{0}/drives/33A0E52B21AB1E6D/items/{1}:/{2}:/createUploadSession'.format(graph_url,folder_id, file),
+    result = graph_client.post('{0}{1}{2}:/createUploadSession'.format(graph_url,path, file),
                      headers={'Authorization': 'Bearer ' + str(token)},
                      json={
                          '@microsoft.graph.conflictBehavior': 'replace',
