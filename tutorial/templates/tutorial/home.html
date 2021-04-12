@@ -8,7 +8,9 @@
   <h1>Repositorio TFM</h1>
   <p class="lead">Esta página web es un repositorio de TFM, donde el alumnado y el profesorado pueden acceder a los documentos</p>
   {% if request.user.is_authenticated %}
-    <h4>Welcome {{ request.user }}!</h4>
+
+    <h4>Hola {{ request.user }}!</h4>
+
     <p>Use the navigation bar at the top of the page to get started.</p>
     <a href="{% url 'upload' %}" class="dropdown-item">Subir Un Archivo</a>
 

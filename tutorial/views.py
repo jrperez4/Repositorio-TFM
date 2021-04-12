@@ -1,5 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+import json
+
 from django.shortcuts import render, redirect
 
 from django.contrib.auth import authenticate, login, logout
@@ -311,7 +313,21 @@ def upload_file(request):
 
       return HttpResponseRedirect(reverse('home'))
     else:
+      jason = json.loads(form.errors.as_json())
+
+      for key in jason.keys():
+
+        if key == 'title':
+            messages.warning(request, "Título: " +  jason.get(key)[0].get("message"))
+        if key == 'keyword':
+            messages.warning(request, "Palabras clave: " +  jason.get(key)[0].get("message"))
+        if key == 'description':
+            messages.warning(request, "Descripción: " + jason.get(key)[0].get("message"))
+
+
       form=upload()
+
+
 
 
   return render(request,'tutorial/upload.html', {'form':form})
@@ -329,14 +345,14 @@ def check_files(request,file, file2, file3):
                 valid_files = True
             else:
                 print("El fichero: ", file3.name , " no es formato PDF")
-                messages.error(request,"El fichero: "+ file3.name + " no es formato PDF")
+                messages.warning(request,"El fichero: "+ file3.name + " no es formato PDF")
         else:
             print("El fichero: ", file2.name , " no es formato PDF")
 
-            messages.error(request, "El fichero: "+ file2.name + " no es formato PDF")
+            messages.warning(request, "El fichero: "+ file2.name + " no es formato PDF")
     else:
         print("El fichero: ", file.name, " no cumple con la extensión comprimida")
-        messages.error(request, "El fichero: "+ file.name + " no cumple con la extensión comprimida")
+        messages.warning(request, "El fichero: "+ file.name + " no cumple con la extensión comprimida")
 
     return valid_files
 

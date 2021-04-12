@@ -238,20 +238,20 @@
 <form method="POST" enctype="multipart/form-data">
      {% csrf_token %}
     <div class="form-group mt-5">
-        <label class="control-label">{{ form.title.label_tag }}</label>
-       <input type="text" class="form-control" name="title" maxlength="50" required="" id="id_title">
+        <label class="control-label">{{ form.title.label_tag }}</label><span style="margin-left: 10px; color: #aaa;" id="size_title"><span id="title_amount"></span></span>
+       <input type="text" class="form-control" name="title" maxlength="50" required="" id="id_title" placeholder="Escriba el título...">
     </div>
 
     <div class="form-group">
-        <label class="control-label">{{ form.keyword.label_tag }}</label>
-        <input type="text" class="form-control" name="keyword" maxlength="50" required="" id="id_keyword">
+        <label class="control-label">{{ form.keyword.label_tag }}</label><span style="margin-left: 10px; color: #aaa;" id="size_keyword"><span id="keyword_amount"></span></span>
+        <input type="text" class="form-control" name="keyword" maxlength="50" required="" id="id_keyword" placeholder="Escriba las palabras clave...">
     </div>
 
     <div class="form-group">
-        <label class="control-label">{{ form.description.label_tag }}</label>
-       <input class="form-control" type="text" name="description" maxlength="50" required="" id="id_description">
 
-        <!--<textarea class="form-control" type="text" required="" maxlength="50" id="id_description" rows="3"></textarea>-->
+        <label class="control-label">{{ form.description.label_tag }}</label><span style="margin-left: 10px; color: #aaa;" id="size_description"><span id="description_amount"></span></span>
+        <textarea style="resize: none;" class="form-control" name="description" cols="20" rows="5" required="" id="id_description" placeholder="Escriba el resumen..." ></textarea>
+
     </div>
 
     <div class="form-group">
@@ -268,10 +268,7 @@
 
     <div class="form-group">
         <label class="control-label">{{ form.documentation.label_tag }}</label>
-        <!--<div class="form-group">
-            {{form.documentation}}
-            <input type="file" name="documentation" required="" id="id_documentation">
-         </div>-->
+
         <div class="form-group">
         <input type="file" name="documentation" required="" id="id_documentation" hidden="hidden" />
             <button type="button " id="custom-button2"><span>Seleccionar archivo</span></button>
@@ -282,10 +279,6 @@
 
      <div class="form-group">
         <label class="control-label">{{ form.memoir.label_tag }}</label>
-         <!--<div class="form-group">
-             {{form.memoir}}
-         </div>-->
-
 
          <div class="form-group">
         <input type="file" name="memoir" required="" id="id_memoir" hidden="hidden" />
@@ -298,16 +291,19 @@
 
     {% for message in messages %}
 
-						 <div class="alert {{ message.tags }} alert-dismissible mt-3" role="alert">
+						 <div class="alert alert-{{ message.tags }} alert-dismissible mt-3" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						  <span aria-hidden="true">&times;</span>
 						</button>
+
 						{{ message }}
+                        {{ form.errors }}
 
 							 {% if form.errors %}
 								  {% for field in form %}
 
 									   {% for error in field.errors %}
+
 											 {{ error|escape }}
 									   {% endfor %}
 
@@ -324,6 +320,7 @@
 
 </form>
     <script>
+
         const realFileBtn = document.getElementById("id_sourcecode");
         const customBtn = document.getElementById("custom-button");
         const customTxt = document.getElementById("custom-text");
@@ -377,6 +374,74 @@ realFileBtn3.addEventListener("change", function() {
     customTxt3.innerHTML = "Ningún archivo seleccionado.";
   }
 });
+
+var maximo_description = 120;
+var limite_description = 10;
+
+var maximo_title = 30;
+var limite_title = 5;
+
+var maximo_keyword = 30;
+var limite_keyword = 5;
+
+
+document.getElementById("description_amount").innerHTML = "(Máx. 120 caracteres)";
+document.getElementById("title_amount").innerHTML = "(Máx. 30 caracteres)";
+document.getElementById("keyword_amount").innerHTML = "(Máx. 30 caracteres)";
+
+cuadro1 = document.getElementById("id_description");
+cuadro1.addEventListener("keyup", function(){
+
+    if(cuadro1.value.length == 0){
+        document.getElementById("description_amount").innerHTML = "(Máx. 120 caracteres)";
+        document.getElementById("description_amount").style.color = "#aaa"
+
+    }else{
+    var cantidad_description = cuadro1.value.length;
+    restantes_description = maximo_description-cantidad_description;
+    document.getElementById("description_amount").innerHTML = restantes_description + " caracteres";
+    cuadro1.maxLength = maximo_description;
+    (restantes_description<=limite_description) ? document.getElementById("description_amount").style.color = "#FF3C3C" :document.getElementById("description_amount").style.color = "#aaa"
+    }
+
+    })
+
+cuadro2 = document.getElementById("id_title");
+cuadro2.addEventListener("keyup", function(){
+    if(cuadro2.value.length == 0){
+        document.getElementById("title_amount").innerHTML = "(Máx. 30 caracteres)";
+        document.getElementById("title_amount").style.color = "#aaa"
+
+    }else{
+    var cantidad_title = cuadro2.value.length;
+    restantes_title = maximo_title-cantidad_title;
+    document.getElementById("title_amount").innerHTML = restantes_title + " caracteres";
+    cuadro2.maxLength = maximo_title;
+    (restantes_title<=limite_title) ? document.getElementById("title_amount").style.color = "#FF3C3C" :document.getElementById("title_amount").style.color = "#aaa"
+    }
+    })
+
+
+cuadro3 = document.getElementById("id_keyword");
+cuadro3.addEventListener("keyup", function(){
+
+     if(cuadro3.value.length == 0){
+        document.getElementById("keyword_amount").innerHTML = "(Máx. 30 caracteres)";
+        document.getElementById("keyword_amount").style.color = "#aaa"
+
+    }else{
+    var cantidad_keyword = cuadro3.value.length;
+    restantes_keyword = maximo_keyword-cantidad_keyword;
+    document.getElementById("keyword_amount").innerHTML = restantes_keyword + " caracteres";
+    cuadro3.maxLength = maximo_keyword;
+    (restantes_keyword<=limite_keyword) ? document.getElementById("keyword_amount").style.color = "#FF3C3C" :document.getElementById("keyword_amount").style.color = "#aaa"
+    }
+
+
+
+})
+
+
 
     </script>
 </div>
