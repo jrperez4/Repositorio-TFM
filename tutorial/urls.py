@@ -19,5 +19,4 @@ urlpatterns = [
   path('logout', views.logoutUser, name='logout'),
   path('files', views.files, name='files'),
   path('upload', views.upload_file, name='upload'),
-  path('createacademiccourse', views.create_course, name='createacademiccourse'),
 ]
