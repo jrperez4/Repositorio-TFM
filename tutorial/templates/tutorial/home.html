@@ -9,11 +9,19 @@
   <p class="lead">Esta página web es un repositorio de TFM, donde el alumnado y el profesorado pueden acceder a los documentos</p>
   {% if request.user.is_authenticated %}
 
+     {% if request.user.username != "administrador" %}
     <h4>Hola {{ request.user }}!</h4>
 
     <p>Use the navigation bar at the top of the page to get started.</p>
-    <a href="{% url 'upload' %}" class="dropdown-item">Subir Un Archivo</a>
+    <a href="{% url 'upload' %}" class="btn btn-primary btn-large">Subir Un Archivo</a>
+    {% else %}
+    <h4>Hola {{ request.user }}!</h4>
+     <p>Está accediendo desde el usuario administrador.</p>
 
+
+    <a href="{% url 'createacademiccourse' %}" class="btn btn-primary btn-large">Crear nuevo año académico</a>
+
+    {% endif %}
   {% else %}
 
   <a href="{% url 'signin' %}" class="btn btn-primary btn-large">Click here to sign in</a>

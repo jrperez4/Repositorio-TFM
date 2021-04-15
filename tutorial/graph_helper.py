@@ -2,8 +2,12 @@
 # Licensed under the MIT License.
 
 # <FirstCodeSnippet>
+
+from datetime import date
+import json
 import os
 
+from pip._vendor.webencodings import Encoding
 from requests_oauthlib import OAuth2Session
 
 import xlrd
@@ -63,8 +67,7 @@ def get_user_files(token):
 
 # </GetFilesSnippet>
 
-def get_paths_to_upload(token,username):
-
+def get_paths_to_upload(token, username):
     graph_client = OAuth2Session(token=token)
     root = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos:/children'.format(graph_url))
 
@@ -73,18 +76,24 @@ def get_paths_to_upload(token,username):
         if folder['name'].find(username) != -1:
             print("CARPETA--->", folder['name'])
             path_memoir = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Memoria/'.format(folder['name'])
-            path_documentation = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Documentacion/'.format(folder['name'])
-            path_sourcecode = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Codigo Fuente/'.format(folder['name'])
+            path_documentation = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Documentacion/'.format(
+                folder['name'])
+            path_sourcecode = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Codigo Fuente/'.format(
+                folder['name'])
 
     return path_memoir, path_sourcecode, path_documentation
 
+
+def create_folder(token):
+    graph_client = OAuth2Session(token=token)
+    result = graph_client.post('{0}/me/drive/root/children'.format(graph_url))
+
+    return result
 
 
 # <GetFilesSnippet>
 def get_user_shared_files(token):
     graph_client = OAuth2Session(token=token)
-
-
 
     # Configure query parameters to
     # modify the results
@@ -94,18 +103,48 @@ def get_user_shared_files(token):
 
     shared = graph_client.get('{0}/drives/33A0E52B21AB1E6D/items/33A0E52B21AB1E6D!109/children'.format(graph_url))
 
-    root = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos:/children'.format(graph_url))
+    root = graph_client.get('{0}/me/drive/root/children'.format(graph_url))
 
     final = graph_client.get('{0}/drives/d29cf38fb7d76d82/items/D29CF38FB7D76D82!137/children'.format(graph_url))
+
+    print("-------------Informacion sobre la carpeta creada ------------------")
+
+    ''' data_set = {"name": "New Folder", "folder": {} , "@microsoft.graph.conflictBehavior": "rename"}
+
+    json_dump = json.dumps(data_set)
+
+    json_object = json.loads(json_dump)
+
+    print(json_object)
+    '''
+
+    result = graph_client.post('{0}/me/drive/items/D29CF38FB7D76D82!104/children'.format(graph_url),
+                               headers={'Authorization': 'Bearer ' + str(token),
+                                        'Content-Type': 'application/json'},
+                               json={
+                                   "name": "Nuevo Curso 1",
+                                   "folder": {},
+                                   "@microsoft.graph.conflictBehavior": "rename"
+                               })
+
+    print("-------------Información sobre la respuesta ------------------")
+
+    print(result)
+    print(result.json())
+
+    print("-----------------AQUI VA EL ROOTS-------------------")
+    print(root.json())
+
+    # folder = create_folder(token)
 
     '''/ drives / {remoteItem - driveId} / items / {remoteItem - id}'''
 
     print("--------------------------------------------------")
 
-    #print("Drive id: " + files.json()['value'][0]['remoteItem']['parentReference']['driveId'])
+    # print("Drive id: " + files.json()['value'][0]['remoteItem']['parentReference']['driveId'])
 
-   #print("Remote item id: " + files.json()['value'][0]['remoteItem']['id'])
-    #print(files.json())
+    # print("Remote item id: " + files.json()['value'][0]['remoteItem']['id'])
+    # print(files.json())
     ''' print("----------------AQUI VA EL SHARED----------------------------------")
     print(shared.json()['value'])
     person = "1.0"
@@ -120,7 +159,7 @@ def get_user_shared_files(token):
     print("-----------------AQUI VA EL ROOTS-------------------")
     print(root.json())
     print("Drive id de Documentos: " + root.json()['parentReference']['driveId'])
-    print("Remote item id Documentos: " + root.json()['parentReference']['id'])'''
+    print("Remote item id Documentos: " + root.json()['parentReference']['id'])
 
     print("----------------Muestrame que tienes-------------")
     print(root.json())
@@ -142,19 +181,95 @@ def get_user_shared_files(token):
     print("El camino para el codigo es: ", camino_codigo)
 
     #final2 = graph_client.get('{0}/drives/{1}/items/{2}/children'.format(graph_url,drive_id,remote_item_id))
+    '''
 
-
-
-
-
-
-
-
+    # print(folder.json())
 
     # Return the JSON result
     return files.json()
+
+
 # </GetFilesSnippet>
 
+def list_all_user_folders():
+    print("---------------------VA A LEER ARCHIVO DE ALUMNOS-----------------------------")
+
+    openFile = xlrd.open_workbook("D:\\TFG - Repositorio TFM\\Repositorio TFM\\tutorial\\AlumnosMatriculadosTFG.xlsx")
+    sheet = openFile.sheet_by_name("Alumnado_20_21")
+
+    userList = []
+    contador = 0
+    while contador <= 10 :
+            if str(sheet.cell_value(contador, 1)) != "Alumno" and sheet.cell_value(contador, 1) != "administrador":
+                userList.append(str(sheet.cell_value(contador, 1)).replace(',', '') + "-" + str(sheet.cell_value(contador, 0)))
+            contador = contador + 1
+
+    return userList
 
 
 
+def create_academic_course(token):
+
+    today = date.today()
+
+
+    actual_year = today.strftime("%Y")
+
+    last_year = int(actual_year)-1
+
+    course_year = "Curso " + str(last_year) + "-" + actual_year
+
+    graph_client = OAuth2Session(token=token)
+
+    list = [course_year, 'TFM Activos', 'TFM Leidos']
+
+    result = graph_client.post('{0}/me/drive/items/D29CF38FB7D76D82!104/children'.format(graph_url),
+                               headers={'Authorization': 'Bearer ' + str(token),
+                                        'Content-Type': 'application/json'},
+                               json={
+                                   "name": list.pop(0),
+                                   "folder": {},
+                                   "@microsoft.graph.conflictBehavior": "rename"
+                               })
+    print("-------------------El Resultado es este--------------------")
+    print(result.json()['id'])
+    dict = { course_year : result.json()['id']}
+    listUserFolder = ['Memoria', 'Documentacion', 'Codigo Fuente']
+
+    for l in list:
+
+          nextresult = graph_client.post('{0}/me/drive/items/{1}/children'.format(graph_url,result.json()['id']),
+                                   headers={'Authorization': 'Bearer ' + str(token),
+                                            'Content-Type': 'application/json'},
+                                   json={
+                                       "name": l,
+                                       "folder": {},
+                                       "@microsoft.graph.conflictBehavior": "rename"
+                                   })
+          dict[l] = nextresult.json()['id']
+
+
+    userlist = list_all_user_folders()
+
+    for l in userlist:
+        user = graph_client.post('{0}/me/drive/items/{1}/children'.format(graph_url,dict['TFM Activos']),
+                         headers={'Authorization': 'Bearer ' + str(token),
+                                  'Content-Type': 'application/json'},
+                         json={
+                             "name": l,
+                             "folder": {},
+                             "@microsoft.graph.conflictBehavior": "rename"
+                         })
+
+        for i in listUserFolder:
+            graph_client.post('{0}/me/drive/items/{1}/children'.format(graph_url, user.json()['id']),
+                              headers={'Authorization': 'Bearer ' + str(token),
+                                       'Content-Type': 'application/json'},
+                              json={
+                                  "name": i,
+                                  "folder": {},
+                                  "@microsoft.graph.conflictBehavior": "rename"
+                              })
+
+
+    return result.json()

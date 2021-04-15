@@ -10,7 +10,7 @@ from django.urls import reverse
 from tutorial.forms import CreateUserForm
 from tutorial.auth_helper import get_sign_in_url, get_token_from_code, store_token, store_user, remove_user_and_token, \
     get_token
-from tutorial.graph_helper import get_user, get_user_files, get_calendar_events, get_user_shared_files, get_paths_to_upload
+from tutorial.graph_helper import get_user, get_user_files, get_calendar_events, get_user_shared_files, get_paths_to_upload, create_academic_course
 import dateutil.parser
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -110,7 +110,7 @@ def check_user(request,dni,correo):
 
     print("---------------------VA A LEER ARCHIVO DE ALUMNOS-----------------------------")
 
-    openFile = xlrd.open_workbook("D:\\Disco Duro\\Repositorio TFM COPIA\\tutorial\\AlumnosMatriculadosTFG.xls")
+    openFile = xlrd.open_workbook("D:\\TFG - Repositorio TFM\\Repositorio TFM\\tutorial\\AlumnosMatriculadosTFG.xlsx")
     sheet = openFile.sheet_by_name("Alumnado_20_21")
     print("N. de filas", sheet.nrows)
     print("N de columnas", sheet.ncols)
@@ -122,6 +122,7 @@ def check_user(request,dni,correo):
             exists_user = True
             print("Se ha encontrado: " + str(sheet.cell_value(i,0))+ "es igual que "+ dni + " el personaje es: ", sheet.cell_value(i,1))
             return exists_user
+
 
     return messages.warning(request,'Email does not match with DNI')
 
@@ -246,10 +247,24 @@ def sharedfiles(request):
             print('Name: ', file['remoteItem']['name'])
             print('Size: ', file['remoteItem']['size'], "\n")
 
+
+
     context['files'] = files['value']
 
 
     return render(request, 'tutorial/sharedfiles.html', context)
+# </FilesViewSnippet>
+
+def create_course(request):
+    context = initialize_context(request)
+
+    token = get_token(request)
+
+    result = create_academic_course(token)
+
+    context["folder"] = result
+
+    return render(request, 'tutorial/home.html', context)
 # </FilesViewSnippet>
 
 
@@ -335,6 +350,10 @@ def upload_file(request):
 def file_size(file):
     file.seek(0, os.SEEK_END)
     return file.tell()
+
+
+
+
 
 def check_files(request,file, file2, file3):
     valid_files  = False
