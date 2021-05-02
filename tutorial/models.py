@@ -55,16 +55,13 @@ from django.contrib.auth.models import User
 
 
 class Bibliografia(models.Model):
-        user_id = models.OneToOneField(User, on_delete=models.SET_NULL, related_name="person", null=True, blank=True)
+        author = models.CharField(max_length=50)
         title = models.CharField(max_length=50)
         keyword = models.CharField(max_length=50)
         description = models.CharField(max_length=50)
-        sourcecode = models.FileField()
-        documentation = models.FileField()
-        memoir = models.FileField()
         id_folder = models.CharField(max_length=50)
 
         def __str__(self):
-                return '%s %s' % (self.user_id, self.title)
+                return 'Autor: %s , Título: %s , Enlace para documentación: %s' % (self.author, self.title, self.id_folder)
 
 

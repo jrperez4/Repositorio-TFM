@@ -7,3 +7,145 @@ body {
   word-break: break-all;
   white-space: pre-wrap;
 }
+#custom-button {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+   #custom-button span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-button span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-button:hover {
+  background-color: #A67624;
+}
+
+#custom-button:hover span{
+   padding-right: 25px;
+}
+#custom-button:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-text {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}
+
+
+#custom-button2 {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+   #custom-button2 span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-button2 span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-button2:hover {
+  background-color: #A67624;
+}
+
+#custom-button2:hover span{
+   padding-right: 25px;
+}
+#custom-button2:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-text2 {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}
+
+
+#custom-button3 {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+#custom-button3 span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-button3 span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-button3:hover {
+ background-color: #A67624;
+}
+
+#custom-button3:hover span{
+   padding-right: 25px;
+}
+#custom-button3:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-text3 {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}

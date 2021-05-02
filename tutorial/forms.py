@@ -45,28 +45,15 @@ class upload(forms.Form):
 		documentation = forms.FileField(label="Justificante de defensa")
 		memoir = forms.FileField(label="Memoria")
 
-		'''def clean_title(self):
-			title = self.cleaned_data["title"]
-			if not title:
-				return title
-
-			if not title[0].isupper():
-				self.add_error("title", "Should start with an uppercase letter")
-
-			if title.endswith("."):
-				self.add_error("title", "Should not end with a full stop")
-
-			if "&" in title:
-				self.add_error("title", "Use 'and' instead of '&'")
-
-			description = self.cleaned_data["description"]
-
-			if not description:
-				return description
-			if :
-				self.add_error("title", "Should start with an uppercase letter")
+class uploadadmin(forms.Form):
+	file_field = forms.FileField(label="Documentación del alumno",widget=forms.ClearableFileInput(attrs={'multiple': True}))
+	'''summary = forms.FileField(label="Resumen",required=False)
+	approval = forms.FileField(label="Visto Bueno",required=False)
+	modality = forms.FileField(label="Modalidad de Defensa",required=False)
+	report = forms.FileField(label="Informe del tutor",required=False)
+	documentation = forms.FileField(label="Justificante de defensa",required=False)
+	modifications = forms.FileField(label="Modificaciones del alumno",required=False)'''
 
 
-			return title'''
 
 

@@ -1,90 +1,6 @@
 {% extends "tutorial/layout.html" %}
 {% block content %}
 
-<!--<div class="jumbotron">
-<style>
-		.login_btn {
-			background: #005c99 !important;
-			color: white !important;
-		}
-		.login_btn:focus {
-			box-shadow: none !important;
-			outline: 0px !important;
-		}
-		.login_container {
-			padding: 0 2rem;
-		}
-		.input-group-text {
-			background: black !important;
-			color: white !important;
-			border: 0 !important;
-			border-radius: 0.25rem 0 0 0.25rem !important;
-		}
-
-	</style>
-
-<form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-                        <div class="input-group mb-3">
-                            {{form.title.label_tag}}
-                            <span style="margin-left: 10px">{{form.title}} </span>
-
-						</div>
-						<div class="input-group mb-3">
-                            {{form.keyword.label_tag}}
-							 <span style="margin-left: 10px">{{form.keyword}} </span>
-						</div>
-						<div class="input-group mb-3">
-                            {{form.description.label_tag}}
-							 <span style="margin-left: 10px">{{form.description}} </span>
-						</div>
-						<div class="input-group mb-3">
-                            {{form.sourcecode.label_tag}}
-							<div class="input-group mb-2">
-							    {{form.sourcecode}}
-                             </div>
-						</div>
-						<div class="input-group mb-3">
-                            {{form.documentation.label_tag}}
-							<div class="input-group mb-2">
-							    {{form.documentation}}
-                             </div>
-						</div>
-
-                         <div class="input-group mb-3">
-                            {{form.memoir.label_tag}}
-                             <div class="input-group mb-2">
-							    {{form.memoir}}
-                             </div>
-						</div>
-
-				   		<div class="d-flex mt-3 login_container">
-				 			<input class="btn login_btn" type="submit" value="Guardar y enviar">
-				   		</div>
-					</form>
-	                    {% for message in messages %}
-
-						 <div class="alert {{ message.tags }} alert-dismissible mt-3" role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						  <span aria-hidden="true">&times;</span>
-						</button>
-						{{ message }}
-
-							 {% if form.errors %}
-								  {% for field in form %}
-
-									   {% for error in field.errors %}
-											 {{ error|escape }}
-									   {% endfor %}
-
-								  {% endfor %}
-							{% endif %}
-					  </div>
-
-						{% endfor %}
-
-    </div>-->
-
 <style>
 
   #custom-button {
@@ -315,11 +231,42 @@
 
 
     <div class="form-group">
-        <button type="submit" class="btn btn-primary mt-5" style="padding: 15px">Guardar y enviar</button>
+        <button type="button" class="btn btn-primary mt-5" style="padding: 15px" data-toggle="modal" data-target="#exampleModal" >Guardar y enviar</button>
     </div>
 
+
+    {% block javascript %}
+
+    <div class="modal fade" id="exampleModal" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ventana de confirmación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro/a de enviar su trabajo?
+        A partir de este punto no podrá modificar ningún documento.</p>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary mt-5" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary mt-5" >Guardar y enviar</button>
+      </div>
+    </div>
+    </div>
+    </div>
+
+    {% endblock %}
+
+
+
 </form>
+
+
     <script>
+
 
         const realFileBtn = document.getElementById("id_sourcecode");
         const customBtn = document.getElementById("custom-button");
@@ -440,6 +387,8 @@ cuadro3.addEventListener("keyup", function(){
 
 
 })
+
+
 
 
 

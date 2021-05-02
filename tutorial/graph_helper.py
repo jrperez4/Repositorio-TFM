@@ -5,6 +5,8 @@
 
 from datetime import date
 import json
+from tutorial.models import Bibliografia
+import json
 import os
 
 from pip._vendor.webencodings import Encoding
@@ -53,15 +55,34 @@ def get_user_files(token):
     # Configure query parameters to
     # modify the results
 
-    query_params = {
+    '''query_params = {
         '$select': 'name,createdBy,user'
     }
 
     # Send GET to /me/drive/root/children
-    files = graph_client.get('{0}/me/drive/root/children'.format(graph_url), params=query_params)
+    files = graph_client.get('{0}/me/drive/root/children'.format(graph_url), params=query_params)'''
+
+    query_params = {
+        '$select': 'name,parentReference,id'
+    }
+    files = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos:/children'.format(graph_url),params=query_params)
 
     print(files.json())
-    # Return the JSON result
+
+    ''' x = '{ "dni":"John", "name":30, "folder":"New York"}'
+    files2 = json.loads(x)
+    print("----------------------",type(files2))
+    print("------------INFORMACION-------------")
+
+    for user in files.json()['value']:
+        files2['dni'] = user['name'].split('-')[1]
+        files2['name'] = user['name'].split('-')[0]
+        files2['folder'] = user['folder']
+
+    for l in files2.values():
+        print(l)'''
+
+        # Return the JSON result
     return files.json()
 
 
@@ -76,12 +97,13 @@ def get_paths_to_upload(token, username):
         if folder['name'].find(username) != -1:
             print("CARPETA--->", folder['name'])
             path_memoir = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Memoria/'.format(folder['name'])
+            path_memoir_content = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Memoria:/content'.format(folder['name'])
             path_documentation = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Documentacion/'.format(
                 folder['name'])
             path_sourcecode = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Codigo Fuente/'.format(
                 folder['name'])
 
-    return path_memoir, path_sourcecode, path_documentation
+    return path_memoir_content, path_memoir, path_sourcecode, path_documentation
 
 
 def create_folder(token):
@@ -103,11 +125,54 @@ def get_user_shared_files(token):
 
     shared = graph_client.get('{0}/drives/33A0E52B21AB1E6D/items/33A0E52B21AB1E6D!109/children'.format(graph_url))
 
-    root = graph_client.get('{0}/me/drive/root/children'.format(graph_url))
+    query_params = {
+        '$select': 'name,parentReference,folder'
+    }
+
+    root = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos:/children'.format(graph_url))
 
     final = graph_client.get('{0}/drives/d29cf38fb7d76d82/items/D29CF38FB7D76D82!137/children'.format(graph_url))
 
-    print("-------------Informacion sobre la carpeta creada ------------------")
+    carpetaleida = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021:/children'.format(graph_url))
+
+    for folder in carpetaleida.json()['value']:
+        if folder['name'] == 'TFM Leidos':
+            id = folder['id']
+            print("EL ID ES:", id)
+
+    for user in root.json()['value']:
+
+        patch = graph_client.patch('{0}/me/drive/items/{1}'.format(graph_url, user['id']),
+                                   headers={'Content-Type': 'application/json'},
+                                   json={
+                                       "parentReference": {
+                                           "id": id
+                                       },
+                                       "name": user['name']
+                                   })
+
+
+
+
+
+    id_folder = Bibliografia.objects.filter(author='Iván Abalde Costas')
+
+    path = id_folder[0].id_folder
+
+
+
+
+
+
+
+
+    print("-------------Informacion sobre root creada ------------------")
+    #print(OAuth2Session(token='https://graph.microsoft.com/v1.0/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/Abalde Costas Iván-1.0/Memoria/ExcedenciaArbitral.pdf:/content'))
+    print(root.json()['value'][1])
+
+
+
+
 
     ''' data_set = {"name": "New Folder", "folder": {} , "@microsoft.graph.conflictBehavior": "rename"}
 
@@ -117,7 +182,7 @@ def get_user_shared_files(token):
 
     print(json_object)
     '''
-
+    '''
     result = graph_client.post('{0}/me/drive/items/D29CF38FB7D76D82!104/children'.format(graph_url),
                                headers={'Authorization': 'Bearer ' + str(token),
                                         'Content-Type': 'application/json'},
@@ -137,8 +202,8 @@ def get_user_shared_files(token):
 
     # folder = create_folder(token)
 
-    '''/ drives / {remoteItem - driveId} / items / {remoteItem - id}'''
-
+    
+    '''
     print("--------------------------------------------------")
 
     # print("Drive id: " + files.json()['value'][0]['remoteItem']['parentReference']['driveId'])
@@ -234,7 +299,7 @@ def create_academic_course(token):
     print("-------------------El Resultado es este--------------------")
     print(result.json()['id'])
     dict = { course_year : result.json()['id']}
-    listUserFolder = ['Memoria', 'Documentacion', 'Codigo Fuente']
+    listUserFolder = ['Memoria', 'Documentacion', 'Codigo Fuente', 'Actas']
 
     for l in list:
 
@@ -260,6 +325,8 @@ def create_academic_course(token):
                              "folder": {},
                              "@microsoft.graph.conflictBehavior": "rename"
                          })
+        dict[l] = user.json()['id']
+
 
         for i in listUserFolder:
             graph_client.post('{0}/me/drive/items/{1}/children'.format(graph_url, user.json()['id']),
@@ -270,6 +337,38 @@ def create_academic_course(token):
                                   "folder": {},
                                   "@microsoft.graph.conflictBehavior": "rename"
                               })
+    '''for i in dict:
+        print(i, dict[i])'''
 
 
     return result.json()
+
+def get_read_id_folder(token):
+    graph_client = OAuth2Session(token=token)
+
+    readfolderid = graph_client.get('{0}/me/drive/root:/Documentos/Curso 2020-2021:/children'.format(graph_url))
+
+    for folder in readfolderid.json()['value']:
+        if folder['name'] == 'TFM Leidos':
+            id = folder['id']
+
+    return id;
+
+def move_single_folder_to_read(token, id, name):
+
+    graph_client = OAuth2Session(token=token)
+
+    parentReference_id = get_read_id_folder(token)
+
+    patch = graph_client.patch('{0}/me/drive/items/{1}'.format(graph_url, id),
+                                   headers={'Content-Type': 'application/json'},
+                                   json={
+                                       "parentReference": {
+                                           "id": parentReference_id
+                                       },
+                                       "name": name
+                                   })
+
+    return patch.json()
+
+

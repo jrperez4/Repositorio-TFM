@@ -10,12 +10,13 @@ from django.urls import reverse
 from tutorial.forms import CreateUserForm
 from tutorial.auth_helper import get_sign_in_url, get_token_from_code, store_token, store_user, remove_user_and_token, \
     get_token
-from tutorial.graph_helper import get_user, get_user_files, get_calendar_events, get_user_shared_files, get_paths_to_upload, create_academic_course
+from tutorial.graph_helper import get_user, get_user_files, get_calendar_events, get_user_shared_files, \
+    get_paths_to_upload, create_academic_course, move_single_folder_to_read
 import dateutil.parser
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 
-from .forms import upload
+from .forms import upload, uploadadmin
 from tutorial.functions.functions import handle_uploaded_file
 from requests_oauthlib import OAuth2Session
 from tutorial.models import Bibliografia
@@ -223,7 +224,9 @@ def files(request):
 
     context['files'] = files['value']
 
-    print(files['value'][0]['createdBy']['application']['id'])
+    print("CONTEXTO................",context['files'])
+
+    #print(files['value'][0]['createdBy']['application']['id'])
 
     return render(request, 'tutorial/files.html', context)
 
@@ -293,7 +296,7 @@ def upload_file(request):
       documentation_size = file_size(documentation)
       memoir_size = file_size(memoir)
 
-      path_memoir, path_sourcecode, path_documentation = get_paths_to_upload(token, request.user.username)
+      path_memoir_content, path_memoir, path_sourcecode, path_documentation = get_paths_to_upload(token, request.user.username)
 
 
       if sourcecode_size < 4000000:
@@ -318,13 +321,13 @@ def upload_file(request):
       else:
           print("Error en el archivo memoir")
 
-      '''user = User.objects.get(id=request.user.id)
-      print("USUARIO->>>>>>>",type(user))
+      author = request.user.first_name
+      print("USUARIO->>>>>>>",type(author))
 
 
-      bibliografia = Bibliografia(user=user,title=form.cleaned_data.get('title'), keyword=form.cleaned_data.get('keyword'), description=form.cleaned_data.get('description'),sourcecode=request.FILES['sourcecode'],documentation=request.FILES['documentation'],memoir=request.FILES['memoir'],id_folder=folder_id)
+      bibliografia = Bibliografia(author=author,title=form.cleaned_data.get('title'), keyword=form.cleaned_data.get('keyword'), description=form.cleaned_data.get('description'),id_folder= path_memoir_content)
       print("BIBLIO---->",bibliografia)
-      bibliografia.save()'''
+      bibliografia.save()
 
       return HttpResponseRedirect(reverse('home'))
     else:
@@ -337,7 +340,7 @@ def upload_file(request):
         if key == 'keyword':
             messages.warning(request, "Palabras clave: " +  jason.get(key)[0].get("message"))
         if key == 'description':
-            messages.warning(request, "Descripción: " + jason.get(key)[0].get("message"))
+            messages.warning(request, "Justificante de defensa: " + jason.get(key)[0].get("message"))
 
 
       form=upload()
@@ -346,6 +349,122 @@ def upload_file(request):
 
 
   return render(request,'tutorial/upload.html', {'form':form})
+
+
+def upload_file_admin(request,file_id,file_name):
+
+    token = get_token(request)
+    form = uploadadmin()
+    print("El id del file es:", file_id)
+    print("El name del file es:", file_name)
+    path_admin = '/me/drive/root:/Documentos/Curso 2020-2021/TFM Activos/{0}/Documentacion/'.format(file_name)
+
+    print("El request method es: ", request.method)
+
+    if request.method == "POST":
+        form = uploadadmin(request.POST, request.FILES)
+
+        if form.is_valid():
+
+            files = request.FILES.getlist('file_field')
+            for file in files:
+                print("FILE: ", file)
+                handle_uploaded_file(file)
+                size = file_size(file)
+
+                if size < 4000000:
+                    upload_file_min_size(file, token, path_admin)
+                elif size >= 4000000:
+                    upload_file_max_size(file, token, path_admin)
+                else:
+                    print("Error en el archivo source code")
+
+                print("TAMAÑO DEL FILE: ", size)
+
+            messages.success(request, 'Documentacion subida para ' + file_name)
+            return HttpResponseRedirect(reverse('files'))
+
+
+
+
+
+
+        else:
+            print("El formulario no es valido:   ", form)
+
+
+
+
+            '''if form.is_valid() and check_files(request, request.FILES['sourcecode'], request.FILES['documentation'],
+                                           request.FILES['memoir']):
+            print("Titulo ->>>>", form.cleaned_data.get('title'))
+            print("Palabras clave ->>>>", form.cleaned_data.get('keyword'))
+            print("Descripción ->>>>", form.cleaned_data.get('description'))
+
+            handle_uploaded_file(request.FILES['sourcecode'])
+            handle_uploaded_file(request.FILES['documentation'])
+            handle_uploaded_file(request.FILES['memoir'])
+
+            sourcecode = request.FILES['sourcecode']
+            documentation = request.FILES['documentation']
+            memoir = request.FILES['memoir']
+
+            sourcecode_size = file_size(sourcecode)
+            documentation_size = file_size(documentation)
+            memoir_size = file_size(memoir)
+
+            path_memoir_content, path_memoir, path_sourcecode, path_documentation = get_paths_to_upload(token,
+                                                                                                        request.user.username)
+
+            if sourcecode_size < 4000000:
+                upload_file_min_size(sourcecode, token, path_sourcecode)
+            elif sourcecode_size >= 4000000:
+                upload_file_max_size(sourcecode, token, path_sourcecode)
+            else:
+                print("Error en el archivo source code")
+
+            if documentation_size < 4000000:
+                upload_file_min_size(documentation, token, path_documentation)
+            elif documentation_size >= 4000000:
+                upload_file_max_size(documentation, token, path_documentation)
+            else:
+                print("Error en el archivo documentation")
+
+            if memoir_size < 4000000:
+                upload_file_min_size(memoir, token, path_memoir)
+            elif memoir_size >= 4000000:
+                upload_file_max_size(memoir, token, path_memoir)
+            else:
+                print("Error en el archivo memoir")
+
+            author = request.user.first_name
+            print("USUARIO->>>>>>>", type(author))
+
+            bibliografia = Bibliografia(author=author, title=form.cleaned_data.get('title'),
+                                        keyword=form.cleaned_data.get('keyword'),
+                                        description=form.cleaned_data.get('description'), id_folder=path_memoir_content)
+            print("BIBLIO---->", bibliografia)
+            bibliografia.save()
+
+            return HttpResponseRedirect(reverse('home'))
+        else:
+            jason = json.loads(form.errors.as_json())
+
+            for key in jason.keys():
+
+                if key == 'title':
+                    messages.warning(request, "Título: " + jason.get(key)[0].get("message"))
+                if key == 'keyword':
+                    messages.warning(request, "Palabras clave: " + jason.get(key)[0].get("message"))
+                if key == 'description':
+                    messages.warning(request, "Justificante de defensa: " + jason.get(key)[0].get("message"))
+
+            form = upload()'''
+
+
+    return render(request, 'tutorial/uploadfileadmin.html', {'form':form})
+
+
 
 def file_size(file):
     file.seek(0, os.SEEK_END)
@@ -374,6 +493,7 @@ def check_files(request,file, file2, file3):
         messages.warning(request, "El fichero: "+ file.name + " no cumple con la extensión comprimida")
 
     return valid_files
+
 
 
 def upload_file_min_size(file,token,path):
@@ -426,3 +546,21 @@ def upload_file_max_size(file,token,path):
             )
             result.raise_for_status()
             start += bytes_read
+
+def move_user_to_read(request,file_id,file_name):
+
+    print("request........................")
+    context = initialize_context(request)
+
+    token = get_token(request)
+
+    move_single_folder_to_read(token,file_id,file_name)
+
+    files = get_user_files(token)
+
+    context['files'] = files['value']
+
+    print(context['files'])
+
+    messages.success(request, 'La documentación de ' + file_name + " ha sido movida a leída")
+    return render(request, 'tutorial/files.html', context)
