@@ -1,0 +1,240 @@
+{% extends "tutorial/layout.html" %}
+{% block content %}
+
+{% if documentation %}
+{% for document in documentation %}
+
+<div class="jumbotron">
+<div class="row">
+<div class="col-sm-4">
+
+<div class="thumbnail" >
+<img alt="Thumbnail" src="../../static/pictures/unilogo.jpg"></div>
+
+
+<!--<div class=" uri simple-item-view-uri item-page-field-wrapper table">
+<h5>Use este enlace para citar</h5>
+<a href="http://hdl.handle.net/2183/27030">http://hdl.handle.net/2183/27030</a>
+</div>-->
+  <div class=" uri simple-item-view-uri item-page-field-wrapper table">
+    <h5>Autor</h5>
+    {{ document.author }}.
+  </div>
+  <div class=" uri simple-item-view-uri item-page-field-wrapper table">
+    <h5>Tutor/Cotutor</h5>
+    {{ document.tutor }} {% if document.cotutor %} y {{ document.cotutor }} {% endif %}.
+  </div>
+  <div class="item-page-field-wrapper table word-break">
+<h5>Centro/Entidad</h5>Universidade de Vigo. Escola Superior de Enxeñaría informática, Campus de Ourense.</div>
+
+<!--<div class="simple-item-view-collections item-page-field-wrapper table">
+<h5>Colecciones</h5>
+<ul class="ds-referenceSet-list">
+
+<li>
+<a href="/dspace/handle/2183/11829">Educación infantil, Grao en</a> [19]</li>
+</ul>
+</div>-->
+<!--<div class="simple-item-view-show-full item-page-field-wrapper table">
+<h5>Metadatos</h5>
+<a href="/dspace/handle/2183/27030?show=full">Mostrar el registro completo del ítem</a>
+</div>-->
+</div>
+<div class="col-sm-8">
+    <section>
+  <details open id="title">
+    <summary style="font-weight: bold;" >Título</summary>
+    <div  >
+      <p >{{ document.title }}.</p>
+    </div>
+  </details>
+  <details>
+    <summary style="font-weight: bold;">Descripción</summary>
+    <div>
+      <p>{{ document.description }}.</p>
+      <!--<p>Los titulares de los derechos de propiedad intelectual autorizan la visualización del contenido de este trabajo a través de Internet, así como su repoducción, gr Los titulares de los derechos de propiedad intelectual autorizan la visualización del contenido de este trabajo a través de Internet, así como su repoducción, gr Los titulares de los derechos de propiedad intelectual autorizan la visualización del contenido de este trabajo a través de Internet, así como su repoducción, gr Los titulares de los derechos de propiedad intelectual autorizan la visualización del contenido de este trabajo a través de Internet, así como su repoducción, gr Los titulares de los derechos de propiedad intelectual autorizan la visualización del contenido de este trabajo a través de Internet, así como su repoducción, grabación en soporte informático o impresión para su uso privado o con fines de investigación. En ningún caso se permite el uso lucrativo de este documento. Estos derechos afectan tanto al resumen del trabajo como a su contenido.</p>-->
+
+    </div>
+  </details>
+  <details id="key_word">
+    <summary style="font-weight: bold;">Palabras Clave</summary>
+    <div>
+      <p>{{ document.keyword }}.</p>
+    </div>
+  </details>
+      <details id="memory">
+    <summary style="font-weight: bold;">Memoria</summary>
+    <div>
+      <a href="{% url 'showpdf' document.memoir %}">
+      <img alt="Thumbnail" src="../../static/pictures/pdfview.jpg">
+        </a>
+      <p>Haciendo clic en la imagen podrá acceder a la documentación en formato pdf del Trabajo de Fin de Máster: {{document.title}} (<a href="{% url 'showpdf' document.memoir %}" ><i aria-hidden="true" class="glyphicon  glyphicon-file"></i>{{ document.memoir }}</a>)</p>
+
+    </div>
+  </details>
+      <details>
+    <summary style="font-weight: bold;">Derechos</summary>
+    <div>
+       <p>Los titulares de los derechos de propiedad intelectual autorizan la visualización del contenido de este trabajo a través de Internet, así como su repoducción, grabación en soporte informático o impresión para su uso privado o con fines de investigación. En ningún caso se permite el uso lucrativo de este documento. Estos derechos afectan tanto al resumen del trabajo como a su contenido.</p>
+
+      <!--<img alt="Thumbnail" src="../../static/pictures/judge.jpeg">-->
+      </div>
+  </details>
+</section>
+
+<!--<div class="item-page-field-wrapper table word-break">
+<h5>Descripción</h5>Traballo fin de grao (UDC.EDU). Educación infantil. Curso 2019/20</div>-->
+<!--<div class="simple-item-view-citation item-page-field-wrapper table">
+<h5>Cita bibliográfica</h5>
+<div>Rial Villar, C. (2019). A perspectiva feminista nas guías docentes dos graos en educación infantil nas universidades da Coruña (UDC) e de Santiago de Compostela (USC). [Traballo de fin de Grao. Universidade da Coruña]</div>
+</div>-->
+
+</div>
+</div>
+</div>
+
+    </div>
+
+
+{% endfor %}
+{% endif %}
+<style>
+    .jumbotron {
+  box-shadow:
+  0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+  0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+  0 12.5px 10px rgba(0, 0, 0, 0.06),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+  0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+  0 100px 80px rgba(0, 0, 0, 0.12)
+;
+
+  background: white;
+
+}
+@import url("https://fonts.googleapis.com/css?family=Karla|Space+Mono");
+
+:root {
+  --contentHeight: fit-content;
+  --sectionWidth: 700px;
+}
+
+.thumbnail{
+    text-align: center;
+    margin-bottom: 3em;
+    }
+
+* {
+  outline: 0;
+  box-sizing: border-box;
+}
+
+section {
+      max-width: var(--sectionWidth);
+    margin: auto;
+
+    color: black;
+}
+
+summary {
+  display: block;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 22px;
+  transition: .3s;
+  border-bottom: 2px solid;
+  user-select: none;
+}
+
+details > div {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: auto;
+  height: 100%;
+  user-select: none;
+  padding: 0 20px;
+  line-height: 1.5;
+}
+
+details > div > img {
+  align-self: flex-start;
+  max-width: 100%;
+  margin-top: 20px;
+}
+
+details > div > p {
+  flex: 1;
+}
+
+details[open] > summary {
+   color: black;
+}
+
+@media (min-width: 768px) {
+  details[open] > div > p {
+    opacity: 0;
+    animation-name: showContent;
+    animation-duration: 0.6s;
+    animation-delay: 0.2s;
+    animation-fill-mode: forwards;
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  details[open] > div {
+    animation-name: slideDown;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+  }
+
+  details[open] > div > img {
+    opacity: 0;
+    height: 100%;
+    margin: 0;
+    animation-name: showImage;
+    animation-duration: 0.3s;
+    animation-delay: 0.15s;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+  }
+
+  to {
+    opacity: 1;
+    height: var(--contentHeight);
+    padding: 30px;
+  }
+}
+
+@keyframes showImage {
+  from {
+    opacity: 0;
+    clip-path: inset(50% 0 50% 0);
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes showContent {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+</style>
+
+{% endblock %}

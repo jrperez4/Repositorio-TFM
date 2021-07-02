@@ -1,0 +1,176 @@
+<!-- Copyright (c) Microsoft Corporation.
+     Licensed under the MIT License. -->
+
+<!-- <CalendarSnippet> -->
+{% extends "tutorial/layout.html" %}
+{% block content %}
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
+<h1>Buscar Trabajo de Fin de Máster</h1><br><br>
+
+<!--<div id="container" class="container" style="margin-bottom:20px;">
+    <div class="row">
+        <div class="col-md-12 search">
+            <form method="get">
+
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" placeholder="Buscar..." id="search" name="search" value="{{ request.GET.search }}">
+                        <span class="input-group-list" style="margin-left: 4px;">
+                            <i class="icon icon-search"></i>
+                            <button type="submit" class="btn btn-primary" onclick="myFunction()">Buscar</button>
+                        </span>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>-->
+<form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+
+
+    <div class="row">
+    <div class="col col-md-8">
+
+     <input type="text" class="form-control" placeholder="Buscar..." id="id_text"  name="text" value="{{ request.GET.text }}" >
+
+    </div>
+    <div class="col col-md-2">
+
+       <select class="form-control" name="select" id="id_select" >
+      <option value="Título">Título</option>
+      <option value="Palabras clave">Palabras clave</option>
+      <option value="Autor">Autor</option>
+      <option value="Tutor">Tutor</option>
+      <option value="Cotutor">Cotutor</option>
+      <option value="Año">Año</option>
+    </select>
+
+    </div>
+         <div class="col col-md-2">
+
+       <button type="submit" class="btn btn-primary" onclick="myFunction()">Buscar</button>
+
+    </div>
+  </div>
+
+
+
+
+
+
+</form>
+
+
+<div id="container-results">
+    {% if references|length > 0 %}
+<h2 style="margin-top: 10px;">Se han encontrado {{ times }} coincidencias para '{{ word }}' en {{ option }} :</h2><br><br>
+</div>
+
+ <div id="result" style="margin-bottom:20px;" class="row">
+
+      {% for reference in references %}
+        {% if reference.readed %}
+    <div class="card col-lg-4 mr-1" style="width: 18rem;">
+  <img class="card-img-top" src="https://cdn.pixabay.com/photo/2016/01/19/17/27/dictionary-1149723_960_720.jpg" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{ reference.title }}</h5>
+    <!--<p class="card-text">{{ reference.description }}</p>-->
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><span style="font-weight: bold;">Palabras clave : </span>{{ reference.keyword }}</li>
+    <li class="list-group-item"><span style="font-weight: bold;">Tutor : </span> {{ reference.tutor }}</li>
+      {% if reference.cotutor %}
+    <li class="list-group-item"><span style="font-weight: bold;">Cotutor : </span> {{ reference.cotutor }}</li>
+       {% endif %}
+    <li class="list-group-item"><span style="font-weight: bold;">Autor : </span> {{ reference.author }}</li>
+      <!--<li class="list-group-item"><span style="font-weight: bold;">DNI : </span> {{ reference.dni }}</li>-->
+      <!--<li class="list-group-item"><span style="font-weight: bold;">Memoria : </span> {{ reference.memoir.name }}</li>-->
+      <!--<li class="list-group-item"><span style="font-weight: bold;">Leido? : </span> {{ reference.readed }}</li>-->
+  </ul>
+  <div class="card-body">
+    <a name="detail-user-view" href="{% url 'detailedfile' reference.dni %}" class="btn btn-primary"><i class="fas fa-eye"></i></a>
+  </div>
+</div>
+
+    {% endif %}
+      {% endfor %}
+    {% elif references|length == 0 %}
+        <h1 style="margin-top: 10px;" data-word="{{word}}" data-option="{{ option }}"> No se han encontrado resultados para '{{ word }}' en {{ option }}. </h1>
+ </div>
+
+
+    {% endif %}
+
+ <!--{% if referenceses %}
+<h1>Todos los trabajos</h1><br><br>
+ <div class="row">
+
+      {% for reference in referenceses %}
+        {% if reference.readed %}
+    <div class="card col-lg-4 mr-1" style="width: 18rem;">
+  <img class="card-img-top" src="https://cdn.pixabay.com/photo/2016/01/19/17/27/dictionary-1149723_960_720.jpg" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{ reference.title }}</h5>
+    <p class="card-text">{{ reference.description }}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><span style="font-weight: bold;">Palabras clave : </span>{{ reference.keyword }}</li>
+    <li class="list-group-item"><span style="font-weight: bold;">Tutor : </span> {{ reference.tutor }}</li>
+    <li class="list-group-item"><span style="font-weight: bold;">Cotutor : </span> {{ reference.cotutor }}</li>
+    <li class="list-group-item"><span style="font-weight: bold;">Autor : </span> {{ reference.author }}</li>
+      <li class="list-group-item"><span style="font-weight: bold;">Leido? : </span> {{ reference.readed }}</li>
+  </ul>
+  <div class="card-body">
+    <a href="#" class="card-link">Ver</a>
+
+  </div>
+</div>
+    {% endif %}
+      {% endfor %}
+ </div>
+    {% endif %}-->
+
+<style>
+
+
+</style>
+
+<script>
+
+
+var searchvalue = document.getElementById("search")
+
+if(document.getElementById("search").value == " "){
+
+        var elem = document.getElementById("container-results");
+        elem.parentNode.removeChild(elem);
+        console.log("he entrado")
+
+        var element = document.createElement("h2");
+        element.appendChild(document.createTextNode('No hay resultados para la búsqueda'));
+        document.getElementById("container").appendChild(element);
+
+}else{
+
+
+}
+
+ var number = document.getElementById("occurrences").getAttribute('data-length');
+
+ console.log(name)
+    document.getElementById("occurrences").innerHTML = "Se han encontrado " + number + " coincidencias para '"+ searchvalue.value+ "' :";
+var val = searchvalue.value.replace(/^\s/g, "")
+console.log(val)
+
+
+
+
+
+</script>
+<div id="test"></div>
+{% endblock %}
+<!-- </CalendarSnippet> -->

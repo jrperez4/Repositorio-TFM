@@ -1,0 +1,324 @@
+{% extends "tutorial/layout.html" %}
+{% block content %}
+
+
+
+<style>
+
+  #custom-btn {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+   #custom-btn span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-btn span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-btn:hover {
+  background-color: #A67624;
+}
+
+#custom-btn:hover span{
+   padding-right: 25px;
+}
+#custom-btn:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-txt {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}
+
+
+
+#custom-btn2 {
+  border-radius: 4px;
+  background-color: #F2BE66;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 11px;
+  padding: 15px;
+  width: 165px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+   #custom-btn2 span{
+     cursor: pointer;
+     display: inline-block;
+     position: relative;
+     transition: 0.5s;
+
+}
+#custom-btn2 span:after{
+  content: '\274F';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#custom-btn2:hover {
+  background-color: #A67624;
+}
+
+#custom-btn2:hover span{
+   padding-right: 25px;
+}
+#custom-btn2:hover span:after{
+    opacity: 1;
+    right: 0;
+}
+
+#custom-txt2 {
+  margin-left: 10px;
+  font-family: sans-serif;
+  color: #aaa;
+}
+
+
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+
+
+</style>
+
+{% for message in messages %}
+
+						 <div class="alert alert-{{ message.tags }} alert-dismissible mt-3" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+						{{ message }}
+
+							 {% if form.errors %}
+								  {% for field in form %}
+
+									   {% for error in field.errors %}
+											 {{ error|escape }}
+									   {% endfor %}
+
+								  {% endfor %}
+							{% endif %}
+					  </div>
+
+						{% endfor %}
+
+<div class="jumbotron">
+    <h2>Crear carpeta de alumno en activo</h2>
+
+
+
+<form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+    <div class="form-group mt-5">
+        <label class="control-label">{{ form.student_name.label_tag }}</label><span style="margin-left: 10px; color: #aaa;" id="size_title"><span id="title_amount"></span></span>
+        <input class="form-control" type="text" name="student_name" maxlength="30" required="" id="id_student_name" placeholder="Nombre del alumno...">
+
+    </div>
+    <div class="form-group mt-5">
+        <label class="control-label">{{ form.student_surname.label_tag }}</label><span style="margin-left: 10px; color: #aaa;" id="size_surname"><span id="surname_amount"></span></span>
+        <input type="text" class="form-control" name="student_surname" maxlength="50" required="" id="id_student_surname" placeholder="Apellidos del alumno...">
+
+    </div>
+    <div class="form-group mt-5">
+        <label class="control-label">{{ form.dni.label_tag }}</label><span style="margin-left: 10px; color: #aaa;" id="size_dni"><span id="dni_amount"></span></span>
+       <input type="text" class="form-control" name="dni" maxlength="9" required="" id="id_dni" placeholder="DNI del alumno...">
+    </div>
+    <div class="form-group mt-5">
+        <label class="control-label">{{ form.email.label_tag }}</label>
+
+        <input type="email" class="form-control" name="email" maxlength="200" required="" id="id_email" placeholder="Email del alumno...">
+       <!--<input type="text" class="form-control" name="dni" maxlength="10" required="" id="id_dni" placeholder="DNI del alumno...">-->
+    </div>
+    <div class="form-group mt-5">
+        <label class="control-label">{{ form.tutor.label_tag }}</label>
+        {{ form.tutor }}
+       <!--<input type="text" class="form-control" name="dni" maxlength="10" required="" id="id_dni" placeholder="DNI del alumno...">-->
+    </div>
+     <div class="form-group mt-5">
+        <label class="control-label">{{ form.cotutor.label_tag }}</label>
+        {{ form.cotutor }}
+       <!--<input type="text" class="form-control" name="dni" maxlength="10" required="" id="id_dni" placeholder="DNI del alumno...">-->
+    </div>
+
+
+
+        <!--<div class="form-group">
+        <label class="control-label">{{ form.title.file_field }}</label>
+
+        <div class="form-group">
+        <input type="file" name="file_field" multiple="" required="" id="id_file_field" hidden="hidden" />
+            <button type="button " id="custom-btn"><span>Seleccionar archivo</span></button>
+        <span id="custom-txt">Ningún archivo seleccionado.</span>
+        </div>
+
+    </div>-->
+
+
+ <div class="form-group">
+        <a href="{% url 'files' %}" style="padding: 15px; margin-right:10px;" class="btn btn-secondary mt-5">Atrás</a>
+        <button type="button" class="btn btn-primary mt-5" style="padding: 15px" data-toggle="modal" data-target="#exampleModal" >Crear</button>
+    </div>
+
+
+    {% block javascript %}
+
+    <div class="modal fade" id="exampleModal" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Añadir carpeta de Alumno a activo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Está seguro/a de crear este alumno?
+            A partir de este punto no podrá modificar ningún dato.</p>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-danger mt-5" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary mt-5" >Añadir</button>
+      </div>
+    </div>
+    </div>
+    </div>
+
+
+    {% endblock %}
+
+
+        </form>
+
+    <script>
+    document.getElementById("title_amount").innerHTML = "(Máx. 30 caracteres)";
+    document.getElementById("dni_amount").innerHTML = "(Máx. 9 caracteres)";
+    document.getElementById("surname_amount").innerHTML = "(Máx. 50 caracteres)";
+
+
+    var maximo_title = 30;
+    var limite_title = 10;
+
+    var maximo_dni = 9;
+    var limite_dni = 3;
+
+    var maximo_surname = 50;
+    var limite_surname = 10;
+
+    cuadro2 = document.getElementById("id_student_name");
+    cuadro2.addEventListener("keyup", function(){
+    if(cuadro2.value.length == 0){
+        document.getElementById("title_amount").innerHTML = "(Máx. 50 caracteres)";
+        document.getElementById("title_amount").style.color = "#aaa"
+
+    }else{
+    var cantidad_title = cuadro2.value.length;
+    restantes_title = maximo_title-cantidad_title;
+    document.getElementById("title_amount").innerHTML = restantes_title + " caracteres";
+    cuadro2.maxLength = maximo_title;
+    (restantes_title<=limite_title) ? document.getElementById("title_amount").style.color = "#FF3C3C" :document.getElementById("title_amount").style.color = "#aaa"
+    }
+    })
+
+    cuadro3 = document.getElementById("id_dni");
+    cuadro3.addEventListener("keyup", function(){
+    if(cuadro3.value.length == 0){
+        document.getElementById("dni_amount").innerHTML = "(Máx. 9 caracteres)";
+        document.getElementById("dni_amount").style.color = "#aaa"
+
+    }else{
+    var cantidad_dni = cuadro3.value.length;
+    restantes_dni = maximo_dni-cantidad_dni;
+    document.getElementById("dni_amount").innerHTML = restantes_dni + " caracteres";
+    cuadro3.maxLength = maximo_dni;
+    (restantes_dni<=limite_dni) ? document.getElementById("dni_amount").style.color = "#FF3C3C" :document.getElementById("dni_amount").style.color = "#aaa"
+    }
+    })
+
+    cuadro4 = document.getElementById("id_student_surname");
+    cuadro4.addEventListener("keyup", function(){
+    if(cuadro4.value.length == 0){
+        document.getElementById("surname_amount").innerHTML = "(Máx. 50 caracteres)";
+        document.getElementById("surname_amount").style.color = "#aaa"
+
+    }else{
+    var cantidad_surname = cuadro4.value.length;
+    restantes_surname = maximo_surname-cantidad_surname;
+    document.getElementById("surname_amount").innerHTML = restantes_surname + " caracteres";
+    cuadro4.maxLength = maximo_surname;
+    (restantes_surname<=limite_surname) ? document.getElementById("surname_amount").style.color = "#FF3C3C" :document.getElementById("surname_amount").style.color = "#aaa"
+    }
+    })
+
+    </script>
+
+
+
+
+</div>
+
+{% endblock %}

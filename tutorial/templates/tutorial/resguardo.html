@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Title</title>
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <style type="text/css">
+
+                body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+                color: #3386DE;
+                text-align: center;
+               padding: 10px 20px 0px 20px;
+            }
+            .section {
+                font-size: 16px;
+                font-weight: 100;
+                color: #79ACE3;
+                text-align: center;
+               padding: 10px 20px 0px 20px;
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: 5px solid black;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+
+        </style>
+    </head>
+    <body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+       <div class="thumbnail" >
+    <img alt="Thumbnail" src="https://www.uvigo.gal/sites/uvigo.gal/files/contents/paragraph-file/2019-11/Logotipo_Universidade_de_Vigo.png" style="width: 120px; height: 120px; margin: 0px;">
+    </div>
+    </div>
+    <div class="col-8">
+      <p class='title'>Resguardo de entrega de documentación TFM </p>
+
+  </div>
+</div>
+</div>
+
+
+         {% if documentation %}
+            {% for document in documentation %}
+        <hr class='hrItem'/>
+        <h3 class='section'> Información general del TFM</h3>
+        <div class='details'>
+
+            <h3> Título:</h3>
+            {{ document.title}}
+
+        </div>
+
+        <div class='details'>
+
+            <h3> Descripción:</h3>
+            {{ document.description}}
+
+        </div>
+
+        <div class='details'>
+
+            <h3> Palabras clave:</h3>
+            {{ document.keyword}}
+
+        </div>
+
+
+        <div class='details'>
+
+            <h3> Tutor: </h3>
+                {{ document.tutor}}
+
+        </div>
+
+        {% if document.cotutor %}
+        <div class='details'>
+
+            <h3> Cotutor: </h3>
+                {{ document.cotutor}}
+
+        </div>
+          {% endif %}
+
+        {% if today %}
+          <div class='details'>
+
+            <h3> Fecha de entrega:</h3>
+            {{ today }}
+
+        </div>
+         {% endif %}
+
+        {% if hour %}
+          <div class='details'>
+
+            <h3> Hora de entrega:</h3>
+            {{ hour }}
+
+        </div>
+         {% endif %}
+
+        <div class='details'>
+
+            <h3> Autorización de la divulgación de su TFM: </h3>
+                 {% if document.authorized_by_author is True %}
+                  Si
+                {% else %}
+                 No
+                {% endif %}
+
+        </div>
+
+
+        <hr class='hrItem' style="border: 1px solid black; margin-top: 10px;"/>
+        <h3 class='section'> Información del alumno</h3>
+        <div class='details'>
+
+            <h3> Autor: </h3>
+                {{ document.author}}
+
+        </div>
+        <div class='details'>
+
+             <h3> DNI:</h3>
+            {{ document.dni}}
+        <hr class='hrItem' style="border: 1px solid black"/>
+        </div>
+
+
+        <div class='details'>
+
+  {% if document.first_court_member is not None and document.second_court_member is not None and document.third_court_member is not None %}
+
+        <h3 class='section'> Información del Tribunal</h3>
+        <div class='details'>
+
+            <h3> Primer miembro del tribunal: </h3>
+                {{ document.first_court_member }}
+
+        </div>
+        <div class='details'>
+
+             <h3> Segundo miembro del tribunal:</h3>
+            {{ document.second_court_member }}
+
+        </div>
+
+        <div class='details'>
+
+             <h3> Tercer miembro del tribunal:</h3>
+            {{ document.third_court_member }}
+
+        </div>
+
+  {% endif %}
+
+
+
+            {% endfor %}
+    {% endif %}
+     </body>
+</html>
+
+<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Title</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               /* text-align: right;*/
+               padding: 10px 20px 0px 20px;
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>Invoice # </p>
+            </div>
+        <div>
+        <div class='details'>
+            Bill to: <br/>
+            Amount:  <br/>
+            Date:
+            <hr class='hrItem' />
+        </div>
+    </div>
+    </body>
+</html>-->

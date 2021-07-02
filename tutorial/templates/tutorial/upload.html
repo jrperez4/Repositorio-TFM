@@ -193,7 +193,7 @@
 
     </div>
 
-     <div class="form-group">
+     <div class="form-group" style="margin-bottom: 3em">
         <label class="control-label">{{ form.memoir.label_tag }}</label>
 
          <div class="form-group">
@@ -202,6 +202,23 @@
         <span id="custom-text3">Ningún archivo seleccionado. (.pdf)</span>
 
         </div>
+
+    </div>
+     <div class="form-group" >
+
+        <div class="row">
+            <div class="col-md-1">{{ form.authorization }}</div>
+            <div class="col-md-11" style="margin-left:-4em;">{{ form.authorization.help_text }}</div>
+        </div>
+
+        <!--<label class="control-label">{{ form.memoir.label_tag }}</label>-->
+
+         <!--<div class="form-group">
+        <input type="file" name="memoir" required="" id="id_memoir" hidden="hidden" />
+            <button type="button " id="custom-button3"><span>Seleccionar archivo</span></button>
+        <span id="custom-text3">Ningún archivo seleccionado. (.pdf)</span>
+
+        </div>-->
 
     </div>
 
@@ -268,6 +285,7 @@
     <script>
 
 
+
         const realFileBtn = document.getElementById("id_sourcecode");
         const customBtn = document.getElementById("custom-button");
         const customTxt = document.getElementById("custom-text");
@@ -322,25 +340,25 @@ realFileBtn3.addEventListener("change", function() {
   }
 });
 
-var maximo_description = 120;
-var limite_description = 10;
+var maximo_description = 200;
+var limite_description = 20;
 
-var maximo_title = 30;
-var limite_title = 5;
+var maximo_title = 50;
+var limite_title = 10;
 
-var maximo_keyword = 30;
-var limite_keyword = 5;
+var maximo_keyword = 50;
+var limite_keyword = 10;
 
 
-document.getElementById("description_amount").innerHTML = "(Máx. 120 caracteres)";
-document.getElementById("title_amount").innerHTML = "(Máx. 30 caracteres)";
-document.getElementById("keyword_amount").innerHTML = "(Máx. 30 caracteres)";
+document.getElementById("description_amount").innerHTML = "(Máx. 200 caracteres)";
+document.getElementById("title_amount").innerHTML = "(Máx. 50 caracteres)";
+document.getElementById("keyword_amount").innerHTML = "(Máx. 50 caracteres)";
 
 cuadro1 = document.getElementById("id_description");
 cuadro1.addEventListener("keyup", function(){
 
     if(cuadro1.value.length == 0){
-        document.getElementById("description_amount").innerHTML = "(Máx. 120 caracteres)";
+        document.getElementById("description_amount").innerHTML = "(Máx. 200 caracteres)";
         document.getElementById("description_amount").style.color = "#aaa"
 
     }else{
@@ -356,7 +374,7 @@ cuadro1.addEventListener("keyup", function(){
 cuadro2 = document.getElementById("id_title");
 cuadro2.addEventListener("keyup", function(){
     if(cuadro2.value.length == 0){
-        document.getElementById("title_amount").innerHTML = "(Máx. 30 caracteres)";
+        document.getElementById("title_amount").innerHTML = "(Máx. 50 caracteres)";
         document.getElementById("title_amount").style.color = "#aaa"
 
     }else{
@@ -373,7 +391,7 @@ cuadro3 = document.getElementById("id_keyword");
 cuadro3.addEventListener("keyup", function(){
 
      if(cuadro3.value.length == 0){
-        document.getElementById("keyword_amount").innerHTML = "(Máx. 30 caracteres)";
+        document.getElementById("keyword_amount").innerHTML = "(Máx. 50 caracteres)";
         document.getElementById("keyword_amount").style.color = "#aaa"
 
     }else{
@@ -388,9 +406,13 @@ cuadro3.addEventListener("keyup", function(){
 
 })
 
-
-
-
+/*
+ var titleInput = document.getElementById("id_title");
+            if (titleInput && titleInput.value) {
+                console.log("El input del titulo tiene valor y es ", titleInput);
+            }else{
+            console.log("El input del codigo fuente no valor y es ", titleInput);
+            }*/
 
     </script>
 </div>

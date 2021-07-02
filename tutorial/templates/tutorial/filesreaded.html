@@ -11,6 +11,14 @@
 .filterable .panel-heading .pull-right {
     margin-top: -20px;
 }
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
 .btn-info{
     background-color: #343a40;
     border-color: #343a40;
@@ -19,16 +27,6 @@
     background-color: #56606a;
     border-color: #343a40;
     transition: background-color .5s;
-}
-
-
-.filterable .filters input[disabled] {
-    background-color: transparent;
-    border: none;
-    cursor: auto;
-    box-shadow: none;
-    padding: 0;
-    height: auto;
 }
 
 .styled-table {
@@ -374,7 +372,7 @@ tr:hover td:last-child {
  .indicator.online {
     background: #28B62C;
     display: inline-block;
-    width: 0.65em;
+     width: 0.65em;
     height: 0.65em;
     border-radius: 50%;
     -webkit-animation: pulse-animation 2s infinite linear;
@@ -392,20 +390,17 @@ tr:hover td:last-child {
     width: 1em;
     height: 1em;
 
-.btn btn-info{
-    height:50px;
-    width:100px;
 }
 
+
+
 </style>
-
-
 
 
 <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
   <!--<a href="#">Curso</a>-->
-  <!--<a href="{% url 'createstudentfile' %}">Añadir alumno</a>-->
+  <a href="{% url 'createstudentfile' %}">Añadir alumno</a>
   <!--<a href="#">Clients</a>-->
   <!--<a href="#">Contact</a>-->
     {% if courses %}
@@ -424,11 +419,10 @@ tr:hover td:last-child {
 </div>
 
 <div id="main">
-
-  <div class="row">
+<div class="row">
 
         <div class="panel panel-primary filterable">
-             {% for message in messages %}
+            {% for message in messages %}
 
 						 <div class="alert alert-{{ message.tags }} alert-dismissible mt-3" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -439,18 +433,19 @@ tr:hover td:last-child {
 
 						{% endfor %}
             <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menú</span>
-            <h1 id="active_year_header">TFM Activos</h1><br>
+             <h1 id="header">TFM Presentados</h1><br>
             <div class="panel-heading mb-10">
                 <div class="pull-right">
-                    <button class="btn btn-info btn-xs btn-filter" style="padding: 2px 4px; "><i class="fas fa-filter" ></i><span> Buscar por nombre</span></button>
-                    <a id="create_student_button" type="button" href="{% url 'createstudentfile' %}" class="btn btn-info btn-xs" style="padding: 2px 4px;">
+                    <button class="btn btn-info btn-xs btn-filter" style="padding: 2px 4px; "><i class="fas fa-filter"></i><span> Buscar por nombre</span></button>
+                    <!--<a type="button" href="{% url 'createstudentfile' %}" class="btn btn-info btn-xs">
                    <i class="fa fa-plus" aria-hidden="true"></i>
                     <span> Añadir Alumno</span>
+                    </a>-->
+                    <a id="return-files" type="button" href="{% url 'files' %}" class="btn btn-info btn-xs" style="padding: 2px 4px; ">
+                   <i class="fab fa-creative-commons-by" aria-hidden="true"></i></i>
+                    <span> Acceder a activos</span>
                     </a>
-                    <a id="files_readed" type="button" href="{% url 'filesreaded' %}" class="btn btn-info btn-xs" style="padding: 2px 4px;">
-                   <i  class="fas fa-check-double" aria-hidden="true"></i>
-                    <span> Acceder a presentados</span>
-                    </a>
+
                 </div>
 
             </div>
@@ -467,36 +462,17 @@ tr:hover td:last-child {
                 {% if files %}
                   {% for file in files %}
                     <tr>
-                      <td id="name" >{{ file.name }}</td>
-
-                        {% if file.status == "En Proceso" %}
+                      <td id="name">{{ file.name }}</td>
+                        {% if file.status == "Defendido" %}
 
                                 <!--<td id="path">{{ file.status }}</td>-->
+                        <td> <i class="indicator online" style="background: green; "></i> {{ file.status }} </td>
 
-                        <td> <i class="indicator online" style="background: #FFBF00; "></i> {{ file.status }} </td>
-                        {% else %}
-
-                        <td> <i class="indicator online" style="background: red; "></i> {{ file.status }} </td>
                         {% endif %}
 
-                      <td>
-                          <a type="button" id="submit2" class="btn btn-info btn-sm px-3 upload-user" data-toggle="modal" data-id="{{file.id}}" data-name="{{file.name}}" style="padding: 3px 3px; color:white;">
-                    <i class="fas fa-file-upload" ></i>
+                      <td><a type="button" id="submit" class="btn btn-info btn-sm px-3 view-user-file" data-toggle="modal" data-target="#modalExample" data-name="{{file.name}}" style="padding: 3px 3px; color:white;">
+                     <i class="fas fa-eye"></i>
                     </a>
-                          <a type="button" id="submit4" class="btn btn-info btn-sm px-3 change-tutors" data-toggle="modal" data-name="{{file.name}}" data-id-file="{{file.id}}" style="padding: 3px 3px;color:white;">
-                    <i class="fas fa-users-cog"></i>
-                    </a>
-                          <a type="button" id="submit3" class="btn btn-info btn-sm px-3 upload-user-record" data-toggle="modal" data-id="{{file.id}}" data-name="{{file.name}}" style="padding: 3px 3px;color:white;">
-                    <i class="fas fa-clipboard"></i>
-                    </a>
-
-                          <a type="button" id="submit" class="btn btn-info btn-sm px-3 move-user" data-toggle="modal" data-target="#modalExample" data-id="{{file.id}}" data-name="{{file.name}}" style="padding: 3px 3px;color:white;">
-                     <i class="fas fa-check-double"></i>
-                    </a>
-                          <a type="button" id="submit5" class="btn btn-info btn-sm px-3 checklist"  data-target="#modalCheklist" data-toggle="modal" data-name="{{file.name}}" data-id-file="{{file.id}}"  data-status="{{file.status}}" data-court="{{file.court}}" data-admin-documentation="{{file.admin_documentation}}" data-admin-record="{{file.admin_record}}" style="padding: 3px 3px;color:white;">
-                    <i class="fas fa-list"></i>
-                    </a>
-
                       </td>
                     </tr>
 
@@ -507,7 +483,7 @@ tr:hover td:last-child {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Marcar TFM como defendido</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Ver TFM presentado en detalle</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -518,103 +494,13 @@ tr:hover td:last-child {
       </div>
       <div class="modal-footer">
           <button type="button" class="btn btn-secondary mt-5" data-dismiss="modal">Cancelar</button>
-          <a name="move-user" href="{% url 'moveusertoread' file.id file.name %}" class="btn btn-primary mt-5">Mover</a>
+          <a name="view-user-file" href="{% url 'detailedfile' file.name %}" class="btn btn-primary mt-5">Ver</a>
 
       </div>
     </div>
     </div>
     </div>
 
-
-    <div class="modal fade" id="modalExample2" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel2">Añadir documentación</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
-            <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="modal_body2" >
-        </p>
-      </div>
-      <div class="modal-footer">
-          <button type="button" class="btn btn-secondary mt-5" data-dismiss="modal">Cancelar</button>
-          <a name="upload-user" href="{% url 'uploadadmin' file.id file.name %}" class="btn btn-primary mt-5">Añadir</a>
-
-      </div>
-    </div>
-    </div>
-    </div>
-
-                <div class="modal fade" id="modalExample3" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel3">Añadir acta</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="modal_body3" >
-        </p>
-      </div>
-      <div class="modal-footer">
-          <button type="button" class="btn btn-secondary mt-5" data-dismiss="modal">Cancelar</button>
-          <a name="upload-user-record" href="{% url 'uploadadminrecord' file.id file.name %}" class="btn btn-primary mt-5">Subir Acta</a>
-
-      </div>
-    </div>
-    </div>
-    </div>
-
-                 <div class="modal fade" id="modalExample4" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel4">Escoger Tribunal</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="modal_body4" >
-        </p>
-      </div>
-      <div class="modal-footer">
-          <button type="button" class="btn btn-secondary mt-5" data-dismiss="modal">Cancelar</button>
-          <a name="change-tutors" href="{% url 'changetutors' file.name file.id %}" class="btn btn-primary mt-5">Escoger
-          </a>
-
-      </div>
-    </div>
-    </div>
-    </div>
-
-     <div class="modal fade" id="modalCheklist" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCheklistLabel">Visualizar Lista de Requerimientos</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="modal_checklist_body" >
-
-        </p>
-      </div>
-      <div class="modal-footer">
-          <button type="button" class="btn btn-secondary mt-5" data-dismiss="modal">Atrás</button>
-          <!--<a name="move-user" href="{% url 'moveusertoread' file.id file.name %}" class="btn btn-primary mt-5">Mover</a>-->
-
-      </div>
-    </div>
-    </div>
-    </div>
 
     {% endblock %}
 
@@ -626,8 +512,7 @@ tr:hover td:last-child {
             </table>
         </div>
     </div>
-
-
+</div>
 </div>
 
 <script>
@@ -635,49 +520,22 @@ var url = window.location.href;
 console.log(url);
 
 
+    if ( url.includes("Curso")) {
 
+    var enlace = url.split('filesreaded/')[0];
+    var enlace2 = url.split('Curso')[1];
 
-if ( url.includes("Curso")) {
-            var lastNine = url.substr(url.length - 9);
-            console.log(lastNine)
-            var currentYear = new Date().getFullYear()
-            console.log(currentYear)
-            var nextYear = currentYear + 1
-            console.log(nextYear)
-            currentCourse = currentYear + "-" +  nextYear
-            console.log(currentCourse)
-            console.log(typeof currentCourse)
-            console.log(typeof url)
+    console.log(enlace)
+    console.log(enlace2)
+    enlaceFinal = enlace +"files/" + "Curso"+ enlace2;
+    console.log(enlaceFinal)
+    $("#return-files").attr("href", enlaceFinal);
+    año = enlace2.substr(enlace2.length - 9);
+    document.getElementById("header").innerHTML = "Alumnos TFM Presentados (" + año +")";
 
-            if ( url.includes(currentCourse)) {
-                console.log("Contiene el curso actual : " + currentCourse)
-
-
-            }else{
-
-                var myobj = document.getElementById("create_student_button");
-                myobj.remove();
-            }
-
-
-             document.getElementById("active_year_header").innerHTML = "TFM Activos (" + lastNine + ")";
-
-
-             header = url.split('files/')[0];
-             curso = url.split('Curso')[1];
-             console.log(header)
-
-            enlaceFinal = header + "filesreaded/"+ "Curso"+ curso;
-            console.log(enlaceFinal)
-            $("#files_readed").attr("href", enlaceFinal);
-
-         }else{
-            document.getElementById("active_year_header").innerHTML = "TFM Activos ";
-         }
-
-
-
-
+}else{
+    console.log("No contiene la palabra curso");
+}
 
 
 function openNav() {
@@ -689,6 +547,7 @@ function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
   document.getElementById("main").style.marginLeft= "0";
 }
+
   $(document).ready(function(){
     $('.filterable .btn-filter').click(function(){
         var $panel = $(this).parents('.filterable'),
@@ -731,191 +590,42 @@ function closeNav() {
         }
     });
 });
-    /* EL MOVE USER TO READ ESTA SIN HACER TODAVIA*/
-    $(document).on('click', '.move-user', function () {
-         var id = $(this).attr('data-id');
+
+    $(document).on('click', '.view-user-file', function () {
          var name = $(this).attr('data-name');
-         console.log(id);
+         var str = name;
+         var res = str.split("-")[1];
 
-         nombre = name.split('-')[0];
-         console.log(name);
-         var enlace = "moveusertoread" + "/"+ id +"/"+ name;
+         console.log(res);
 
-         if ( url.includes("Curso")) {
-             console.log(url + "Si que contiene Curso en su string");
-             enlace = "moveusertoread" + "/"+ id +"/"+name +"/" + "Curso " + lastNine ;
-         }else{
-            console.log(url + "No contiene Curso en su string");
-         }
+         var enlace = "detailedfile" + "/"+ res ;
 
 
-
-         console.log(enlace);
-         $('#modalExample a[name=move-user]').prop('href', enlace);
-         $('#modalExample').modal('show');
-
-         document.getElementById("modal_body").innerHTML = "¿Desea marcar la carpeta de "+ nombre+ " como defendido?";
-
-        });
-
-    $(document).on('click', '.upload-user', function () {
-         var id = $(this).attr('data-id');
-         var name = $(this).attr('data-name');
-         console.log(id);
-         console.log(name);
-
-         nombre = name.split('-')[0];
-         console.log(nombre);
-
-         var enlace = "uploadadmin" + "/"+ id +"/"+name;
          lastNine = url.substr(url.length - 9);
           if ( url.includes("Curso")) {
-             console.log(url + "Si que contiene Curso en su string");
-             enlace = "uploadadmin" + "/"+ id +"/"+name +"/" + "Curso " + lastNine ;
-         }else{
-            console.log(url + "No contiene Curso en su string");
-         }
-
-         console.log(enlace);
-         $('#modalExample2 a[name=upload-user]').prop('href', enlace);
-         $('#modalExample2').modal('show');
-
-         document.getElementById("modal_body2").innerHTML = "¿Desea añadir documentación a "+ nombre + "?";
-
-
-        });
-
-    $(document).on('click', '.upload-user-record', function () {
-         var id = $(this).attr('data-id');
-         var name = $(this).attr('data-name');
-         console.log(id);
-
-         nombre = name.split('-')[0];
-         console.log(nombre);
-         lastNine = url.substr(url.length - 9);
-         var enlace = "uploadadminrecord" + "/"+ id +"/"+name;
-
-         if ( url.includes("Curso")) {
-             console.log(url + "Si que contiene Curso en su string");
-             enlace = "uploadadminrecord" + "/"+ id +"/"+name +"/" + "Curso " + lastNine  ;
-         }else{
-            console.log(url + "No contiene Curso en su string");
-         }
-
-
-         console.log(enlace);
-         $('#modalExample3 a[name=upload-user-record]').prop('href', enlace);
-         $('#modalExample3').modal('show');
-
-         document.getElementById("modal_body3").innerHTML = "¿Desea añadir acta a "+ nombre + "?";
-
-
-        });
-
-        $(document).on('click', '.change-tutors', function () {
-         var name = $(this).attr('data-name');
-         var id_file = $(this).attr('data-id-file');
-         console.log(name);
-         console.log(id_file)
-
-         nombre = name.split('-')[0];
-         console.log(nombre);
-         lastNine = url.substr(url.length - 9);
-         var enlace = "changetutors/" + name +"/"+ id_file ;
-         console.log(enlace);
-
-         if ( url.includes("Curso")) {
+             header = url.split('filesreaded/')[0];
+             console.log(header)
              console.log(url + " Si que contiene Curso en su string");
-             enlace = "changetutors/" + name +"/"+ id_file +"/"+ "Curso " + lastNine  ;
+             enlace = header + "detailedfile/" + res;
+             $('#modalExample a[name=view-user-file]').prop('href', enlace);
+             $('#modalExample').modal('show');
+             console.log(enlace)
          }else{
             console.log(url + "No contiene Curso en su string");
+            console.log(enlace);
+         $('#modalExample a[name=view-user-file]').prop('href', enlace);
+         $('#modalExample').modal('show');
          }
 
+         /*console.log(enlace);
+         $('#modalExample a[name=view-user-file]').prop('href', enlace);
+         $('#modalExample').modal('show');*/
 
-         console.log(enlace);
-         $('#modalExample4 a[name=change-tutors]').prop('href', enlace);
-         $('#modalExample4').modal('show');
-
-         document.getElementById("modal_body4").innerHTML = "¿Desea seleccionar los miembros del tribunal para "+ nombre + "?";
+         document.getElementById("modal_body").innerHTML = "¿Desea ver en detalle el trabajo de "+ name+ " ?";
 
 
         });
 
-          $(document).on('click', '.checklist', function () {
-         var name = $(this).attr('data-name');
-         var id_file = $(this).attr('data-id-file');
-         var status = $(this).attr('data-status');
-         var court = $(this).attr('data-court');
-         var admin_documentation = $(this).attr('data-admin-documentation');
-         var admin_record = $(this).attr('data-admin-record');
-
-
-
-
-         const myNode = document.getElementById("modal_checklist_body");
-         myNode.innerHTML = '';
-
-
-         console.log(name);
-         console.log(id_file)
-
-         nombre = name.split('-')[0];
-         console.log(nombre);
-         lastNine = url.substr(url.length - 9);
-         var enlace = "changetutors/" + name +"/"+ id_file ;
-         console.log(enlace);
-
-         if ( url.includes("Curso")) {
-             console.log(url + " Si que contiene Curso en su string");
-             enlace = "changetutors/" + name +"/"+ id_file +"/"+ "Curso " + lastNine  ;
-         }else{
-            console.log(url + "No contiene Curso en su string");
-         }
-
-
-         console.log(enlace);
-         $('#modalCheklist a[name=checklist]').prop('href', enlace);
-         $('#modalCheklist').modal('show');
-
-
-
-         console.log(status);
-         if ( status == 'En Proceso') {
-         console.log("El estado del TFM se encuentra como entregado")
-
-         $( "#modal_checklist_body" ).append('<p id="documentation"><i class="far fa-check-square"></i> Código Fuente </p>');
-         $( "#modal_checklist_body" ).append('<p id="documentation"><i class="far fa-check-square"></i> Justificante de defensa</p>');
-         $( "#modal_checklist_body" ).append('<p id="documentation"><i class="far fa-check-square"></i> Memoria TFM</p>');
-
-
-         }else{
-         console.log("El estado del TFM se encuentra como NO entregado")
-         $( "#modal_checklist_body" ).append('<p><i class="far fa-square"></i></i> Código Fuente </p>');
-         $( "#modal_checklist_body" ).append('<p><i class="far fa-square"></i></i> Justificante de defensa</p>');
-         $( "#modal_checklist_body" ).append('<p><i class="far fa-square"></i></i> Memoria TFM</p>');
-
-
-         }
-         if ( court == 'Asignado') {
-             $( "#modal_checklist_body" ).append('<p id="court" style="font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji""><i class="far fa-check-square"></i> Tribunal</p>');
-            }
-         if ( court == 'No asignado') {
-             $( "#modal_checklist_body" ).append('<p id="court" style="font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji""><i class="far fa-square"> Tribunal</p>');
-            }
-         if( admin_documentation == 'Subida'){
-             $( "#modal_checklist_body" ).append('<p id="admin_documentation"><i class="far fa-check-square"></i> Archivos subidos por administrador</p>');
-         }
-         if( admin_documentation == 'No subida'){
-         $( "#modal_checklist_body" ).append('<p id="admin_documentation"><i class="far fa-square"> Archivos subidos por administrador</p>');
-         }
-         if( admin_record == 'Subida'){
-             $( "#modal_checklist_body" ).append('<p id="admin_record"><i class="far fa-check-square"></i> Acta</p>');
-         }
-         if( admin_record == 'No subida'){
-         $( "#modal_checklist_body" ).append('<p id="admin_record" style="font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji""><i class="far fa-square"> Acta</p>');
-         }
-
-        });
 
 
     const realFileBtn = document.getElementById("id_summary");

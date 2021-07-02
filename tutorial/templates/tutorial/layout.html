@@ -30,6 +30,7 @@
               <a href="{% url 'home' %}" class="nav-link{% if request.resolver_match.view_name == 'home' %} active{% endif %}">Home</a>
             </li>
             {% if request.user.is_authenticated %}
+                {% if request.user.username == "administrador" %}
               <li class="nav-item" data-turbolinks="false">
                 <a class="nav-link{% if request.resolver_match.view_name == 'calendar' %} active{% endif %}" href="{% url 'calendar' %}">Calendar</a>
               </li>
@@ -38,21 +39,21 @@
               </li>
 
              <li class="nav-item" data-turbolinks="false">
-                <a class="nav-link{% if request.resolver_match.view_name == 'sharedfiles' %} active{% endif %}" href="{% url 'sharedfiles' %}">Shared Files</a>
+                <a class="nav-link{% if request.resolver_match.view_name == 'sharedfiles' %} active{% endif %}" href="{% url 'sharedfiles' %}">Demo</a>
               </li>
-              <li class="nav-item">
-                <a href="{% url 'signin' %}" class="nav-link">Conectar con OneDrive</a>
 
-              </li>
+              {% endif %}
+
+
             {% endif %}
 
           </ul>
           <ul class="navbar-nav justify-content-end">
-            <li class="nav-item">
+            <!--<li class="nav-item">
               <a class="nav-link" href="https://developer.microsoft.com/graph/docs/concepts/overview" target="_blank">
                 <i class="fas fa-external-link-alt mr-1"></i>Docs
               </a>
-            </li>
+            </li>-->
             {% if request.user.is_authenticated %}
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -65,22 +66,26 @@
                 <div class="dropdown-menu dropdown-menu-right">
                   <h5 class="dropdown-item-text mb-0">{{ request.user.username }}</h5>
                   <p class="dropdown-item-text text-muted mb-0">{{ request.user.email }}</p>
+                  {% if documentation_uploaded == True %}
+                    <a href="downloadreceipt" class="dropdown-item-text text-muted mb-0" >Descargar resguardo</a>
+                  {% endif %}
                   <div class="dropdown-divider"></div>
-                  <a href="{% url 'signout' %}" class="dropdown-item">Sign Out</a>
-                  <a href="{% url 'logout' %}" class="dropdown-item">Log Out</a>
+                  <!--<a href="{% url 'signout' %}" class="dropdown-item">Sign Out</a>-->
+                  <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
+
                 </div>
               </li>
             {% else %}
-              <li class="nav-item">
+              <!--<li class="nav-item">
                 <a href="{% url 'signin' %}" class="nav-link">Conectar con OneDrive</a>
 
-              </li>
+              </li>-->
              <li class="nav-item">
-                <a href="{% url 'register' %}" class="nav-link">Register</a>
+                <a href="{% url 'register' %}" class="nav-link">Registrarse</a>
               </li>
 
              <li class="nav-item">
-                <a href="{% url 'logout' %}" class="nav-link">Log Out</a>
+                <a href="{% url 'login' %}" class="nav-link">Login</a>
               </li>
 
             {% endif %}
